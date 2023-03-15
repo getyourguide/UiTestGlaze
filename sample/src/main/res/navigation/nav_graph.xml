@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.getyourguide.uitestglaze.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_loadingViewsFragment"
+            app:destination="@id/loadingViewsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_inputViewsFragment"
+            app:destination="@id/inputViewsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_listViewFragment"
+            app:destination="@id/listViewFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_jetpackComposeViewsFragment"
+            app:destination="@id/jetpackComposeViewsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loadingViewsFragment"
+        android:name="com.getyourguide.uitestglaze.loadingviews.LoadingViewsFragment"
+        android:label="LoadingViewsFragment"
+        tools:layout="@layout/fragment_loading_views" />
+    <fragment
+        android:id="@+id/inputViewsFragment"
+        android:name="com.getyourguide.uitestglaze.inputviews.InputViewsFragment"
+        android:label="InputViewsFragment"
+        tools:layout="@layout/fragment_input_views" />
+    <fragment
+        android:id="@+id/listViewFragment"
+        android:name="com.getyourguide.uitestglaze.listview.ListViewFragment"
+        android:label="ListViewFragment"
+        tools:layout="@layout/fragment_list_view" />
+    <fragment
+        android:id="@+id/jetpackComposeViewsFragment"
+        android:name="com.getyourguide.uitestglaze.jetpackcomposeviews.JetpackComposeViewsFragment"
+        android:label="JetpackComposeViewsFragment" />
+</navigation>
