@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.getyourguide.uitestglaze'
+    namespace 'com.getyourguide.uitestglazesample'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.getyourguide.uitestglaze"
+        applicationId "com.getyourguide.uitestglazesample"
         minSdk 24
         targetSdk 33
         versionCode 1

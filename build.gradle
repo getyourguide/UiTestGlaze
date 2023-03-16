@@ -3,4 +3,7 @@ plugins {
     alias libs.plugins.android.library apply false
     alias libs.plugins.kotlin.android apply false
     alias libs.plugins.androidx.navigation.safeargs apply false
+    alias libs.plugins.gradle.nexus.publish.plugin apply true
 }
+
+apply from: "${rootDir}/scripts/publish-root.gradle"

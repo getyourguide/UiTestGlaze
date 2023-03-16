@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.getyourguide.uitestglaze.MainFragment"
+        android:name="com.getyourguide.uitestglazesample.MainFragment"
         android:label="MainFragment"
         tools:layout="@layout/fragment_main">
         <action
@@ -25,21 +25,21 @@
     </fragment>
     <fragment
         android:id="@+id/loadingViewsFragment"
-        android:name="com.getyourguide.uitestglaze.loadingviews.LoadingViewsFragment"
+        android:name="com.getyourguide.uitestglazesample.loadingviews.LoadingViewsFragment"
         android:label="LoadingViewsFragment"
         tools:layout="@layout/fragment_loading_views" />
     <fragment
         android:id="@+id/inputViewsFragment"
-        android:name="com.getyourguide.uitestglaze.inputviews.InputViewsFragment"
+        android:name="com.getyourguide.uitestglazesample.inputviews.InputViewsFragment"
         android:label="InputViewsFragment"
         tools:layout="@layout/fragment_input_views" />
     <fragment
         android:id="@+id/listViewFragment"
-        android:name="com.getyourguide.uitestglaze.listview.ListViewFragment"
+        android:name="com.getyourguide.uitestglazesample.listview.ListViewFragment"
         android:label="ListViewFragment"
         tools:layout="@layout/fragment_list_view" />
     <fragment
         android:id="@+id/jetpackComposeViewsFragment"
-        android:name="com.getyourguide.uitestglaze.jetpackcomposeviews.JetpackComposeViewsFragment"
+        android:name="com.getyourguide.uitestglazesample.jetpackcomposeviews.JetpackComposeViewsFragment"
         android:label="JetpackComposeViewsFragment" />
 </navigation>

@@ -3,6 +3,14 @@ plugins {
     alias libs.plugins.kotlin.android
 }
 
+ext {
+    PUBLISH_GROUP_ID = 'io.github.getyourguide'
+    PUBLISH_VERSION = '0.1.0'
+    PUBLISH_ARTIFACT_ID = 'uitestglaze'
+}
+
+apply from: "${rootDir}/scripts/publish-module.gradle"
+
 android {
     namespace 'com.getyourguide.uitestglaze'
     compileSdk 33
