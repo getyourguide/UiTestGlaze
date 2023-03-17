@@ -33,20 +33,22 @@ internal object FindUiElementHelper {
     ): FoundUiElement? {
         var newHierarchy = hierarchy
         var foundUiElement: FoundUiElement? = null
-        repeat(20) {
-            foundUiElement = when (uiElement) {
-                is UiElement.ChildFrom -> TODO()
-                is UiElement.Id -> findUiElementId(uiElement, newHierarchy)
-                is UiElement.Text -> findUiElementText(uiElement, newHierarchy)
-                is UiElement.TextRegex -> TODO()
+        run repeatBlock@{
+            repeat(20) {
+                foundUiElement = when (uiElement) {
+                    is UiElement.ChildFrom -> TODO()
+                    is UiElement.Id -> findUiElementId(uiElement, newHierarchy)
+                    is UiElement.Text -> findUiElementText(uiElement, newHierarchy)
+                    is UiElement.TextRegex -> TODO()
+                }
+                if (foundUiElement != null || optional) {
+                    Logger.i("FindUiElementHelper getUiElement $uiElement found so return")
+                    return@repeatBlock
+                }
+                Logger.i("FindUiElementHelper getUiElement $uiElement not found so try again")
+                Thread.sleep(200)
+                newHierarchy = GetHierarchyHelper.getHierarchy(device)
             }
-            if (foundUiElement != null || optional) {
-                Logger.i("FindUiElementHelper getUiElement $uiElement found so return")
-                return@repeat
-            }
-            Logger.i("FindUiElementHelper getUiElement $uiElement not found so try again")
-            Thread.sleep(200)
-            newHierarchy = GetHierarchyHelper.getHierarchy(device)
         }
 
         if (foundUiElement == null) {
