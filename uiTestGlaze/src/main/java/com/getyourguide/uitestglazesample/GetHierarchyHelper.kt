@@ -27,10 +27,12 @@ import java.io.ByteArrayOutputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
 internal object GetHierarchyHelper {
+    private const val MAX_TRIES = 25
 
     private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
 
     fun getHierarchy(device: UiDevice): TreeNode {
+        var currentTry = 0
         do {
             try {
                 val hierarchyFromDevice = getHierarchyFromDevice(device)
@@ -41,9 +43,11 @@ internal object GetHierarchyHelper {
             } catch (e: Exception) {
                 Logger.i("GetHierarchyHelper getHierarchy exception try again")
                 Thread.sleep(500)
+                currentTry++
                 continue
             }
-        } while (true)
+        } while (currentTry < MAX_TRIES)
+        throw IllegalStateException("Timeout hit while waiting for hierarchy to settle")
     }
 
     private fun getHierarchyFromDevice(device: UiDevice): String {
