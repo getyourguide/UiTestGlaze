@@ -10,19 +10,20 @@ internal object HierarchySettleHelper {
         loadingResourceIds: List<UiTestGlaze.Config.IdResource>,
         device: UiDevice
     ): TreeNode {
-        Thread.sleep(300)
+        Thread.sleep(200)
         var currentTry = 0
         var hierarchy: TreeNode = GetHierarchyHelper.getHierarchy(device)
 
         do {
-            val isLoadingViewShown = loadingResourceIds.mapNotNull {
-                FindUiElementHelper.getUiElement(
-                    UiElement.Id(it.id),
-                    hierarchy,
-                    true,
-                    device
-                )
-            }.isNotEmpty()
+            val isLoadingViewShown = loadingResourceIds.asSequence()
+                .mapNotNull {
+                    FindUiElementHelper.getUiElement(
+                        UiElement.Id(it.id),
+                        hierarchy,
+                        true,
+                        device
+                    )
+                }.any()
             if (isLoadingViewShown) {
                 Logger.i("waitTillHierarchySettles loading view is shown")
                 currentTry++
@@ -35,7 +36,7 @@ internal object HierarchySettleHelper {
             throw IllegalStateException("Timeout hit while waiting for loading view to disappear")
         }
 
-        Thread.sleep(300)
+        Thread.sleep(200)
         repeat(25) {
             val hierarchyAfter = GetHierarchyHelper.getHierarchy(device)
             if (hierarchyAfter == hierarchy) {

@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+[0.6.0] - 2023-03-17
+
+Changed:
+- Decrease timeout when checking if hierarchy has settled
+- Use sequence to check if a loading view is shown to only evaluate list till first not null item is found
+
 [0.5.0] - 2023-03-17
 
 Fixed:
@@ -37,7 +43,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.5.0...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.6.0
 [0.5.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.5.0
 [0.4.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.4.0
 [0.3.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.3.0
