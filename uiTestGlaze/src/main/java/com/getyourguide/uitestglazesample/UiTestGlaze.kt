@@ -50,7 +50,10 @@ data class UiTestGlaze(
         HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
     }
 
-    fun dumpViewHierarchy() {
+    fun dumpViewHierarchy(waitForHierarchyToSettle: Boolean = false) {
+        if (waitForHierarchyToSettle) {
+            HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+        }
         PrintHierarchyHelper.print(GetHierarchyHelper.getHierarchy(device))
     }
 
@@ -70,15 +73,15 @@ sealed class UiElement(open val index: Int = 0) {
 }
 
 sealed interface ScrollOption {
-    data class Vertical(val inUiElementId: UiElement.Id) : ScrollOption
-    data class Horizontal(val inUiElementId: UiElement.Id) : ScrollOption
+    data class VerticalDown(val inUiElementId: UiElement.Id) : ScrollOption
+    data class HorizontalRight(val inUiElementId: UiElement.Id) : ScrollOption
     data class Manual(val startX: Int, val startY: Int, val endX: Int, val endY: Int) : ScrollOption
-    data class VerticalToElement(
+    data class VerticalDownToElement(
         val toUiElement: UiElement,
         val inUiElementId: UiElement.Id
     ) : ScrollOption
 
-    data class HorizontalToElement(
+    data class HorizontalRightToElement(
         val toUiElement: UiElement,
         val inUiElementId: UiElement.Id
     ) : ScrollOption

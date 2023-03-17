@@ -14,7 +14,7 @@ class VerticalListTest {
         testRule.launchActivity(null)
         with(UiTestGlaze()) {
             tap(UiElement.Text("List", false))
-            scroll(ScrollOption.Vertical(UiElement.Id(R.id.list)))
+            scroll(ScrollOption.VerticalDown(UiElement.Id(R.id.list)))
         }
     }
 }
