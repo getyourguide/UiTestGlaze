@@ -22,7 +22,7 @@ package com.getyourguide.uitestglazesample
 
 //Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
 internal data class TreeNode(
-    val attributes: Map<String, String> = emptyMap(),
+    val attributes: Map<GetHierarchyHelper.Attribute, String> = emptyMap(),
     val children: List<TreeNode> = emptyList(),
 ) {
 

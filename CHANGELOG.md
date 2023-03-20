@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+[0.8.0] - 2023-03-20
+
+Added:
+- `find` to get an UiElement
+- Added `text`, `clickable`, `checked` and `enabled` properties to `FoundUiElement`
+
 [0.7.0] - 2023-03-20
 
 Fixed:
@@ -48,8 +54,9 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.7.0...HEAD
-[0.6.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.7.0
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.8.0...HEAD
+[0.8.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.8.0
+[0.7.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.7.0
 [0.6.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.6.0
 [0.5.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.5.0
 [0.4.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.4.0

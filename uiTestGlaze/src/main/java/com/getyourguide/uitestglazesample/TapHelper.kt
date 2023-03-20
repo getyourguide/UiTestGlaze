@@ -72,13 +72,3 @@ internal class TapHelper(private val config: UiTestGlaze.Config) {
         return hierarchyAfterTap != hierarchyBeforeTap
     }
 }
-
-
-internal data class FoundUiElement(
-    val x: Int,
-    val y: Int,
-    val width: Int,
-    val height: Int,
-    val resourceId: String? = null,
-    val text: String? = null
-)

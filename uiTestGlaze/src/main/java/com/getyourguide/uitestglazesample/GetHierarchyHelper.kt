@@ -27,6 +27,16 @@ import java.io.ByteArrayOutputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
 internal object GetHierarchyHelper {
+
+    enum class Attribute {
+        TEXT,
+        RESOURCE_ID,
+        CLICKABLE,
+        BOUNDS,
+        CHECKED,
+        ENABLED
+    }
+
     private const val MAX_TRIES = 25
 
     private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
@@ -73,39 +83,39 @@ internal object GetHierarchyHelper {
     //Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
     private fun mapHierarchy(node: Node): TreeNode? {
         val attributes = if (node is Element && isNotSystembar(node)) {
-            val attributesBuilder = mutableMapOf<String, String>()
+            val attributesBuilder = mutableMapOf<Attribute, String>()
 
             if (node.hasAttribute("text")) {
                 val text = node.getAttribute("text")
 
                 if (text.isNotBlank()) {
-                    attributesBuilder["text"] = text
+                    attributesBuilder[Attribute.TEXT] = text
                 } else if (node.hasAttribute("content-desc")) {
                     // Using content-desc as fallback for text
-                    attributesBuilder["text"] = node.getAttribute("content-desc")
+                    attributesBuilder[Attribute.TEXT] = node.getAttribute("content-desc")
                 } else {
-                    attributesBuilder["text"] = text
+                    attributesBuilder[Attribute.TEXT] = text
                 }
             }
 
             if (node.hasAttribute("resource-id")) {
-                attributesBuilder["resource-id"] = node.getAttribute("resource-id")
+                attributesBuilder[Attribute.RESOURCE_ID] = node.getAttribute("resource-id")
             }
 
             if (node.hasAttribute("clickable")) {
-                attributesBuilder["clickable"] = node.getAttribute("clickable")
+                attributesBuilder[Attribute.CLICKABLE] = node.getAttribute("clickable")
             }
 
             if (node.hasAttribute("bounds")) {
-                attributesBuilder["bounds"] = node.getAttribute("bounds")
+                attributesBuilder[Attribute.BOUNDS] = node.getAttribute("bounds")
             }
 
             if (node.hasAttribute("checked")) {
-                attributesBuilder["checked"] = node.getAttribute("checked")
+                attributesBuilder[Attribute.CHECKED] = node.getAttribute("checked")
             }
 
             if (node.hasAttribute("enabled")) {
-                attributesBuilder["enabled"] = node.getAttribute("enabled")
+                attributesBuilder[Attribute.ENABLED] = node.getAttribute("enabled")
             }
 
             attributesBuilder

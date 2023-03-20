@@ -40,6 +40,12 @@ data class UiTestGlaze(
         return AssertionHelper.assert(assertion, optional, hierarchy, device)
     }
 
+    fun find(uiElement: UiElement): FoundUiElement? {
+        val hierarchy =
+            HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+        return FindUiElementHelper.getUiElement(uiElement, hierarchy, true, device)
+    }
+
     fun inputText(text: String, uiElement: UiElement) {
         InputTextHelper.inputText(text, uiElement, device)
         HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
@@ -101,3 +107,15 @@ sealed interface PressKey {
     object VolumeUp : PressKey
     object VolumeDown : PressKey
 }
+
+data class FoundUiElement(
+    val x: Int,
+    val y: Int,
+    val width: Int,
+    val height: Int,
+    val resourceId: String? = null,
+    val text: String? = null,
+    val clickable: Boolean? = null,
+    val checked: Boolean? = null,
+    val enabled: Boolean? = null
+)

@@ -65,7 +65,10 @@ internal object FindUiElementHelper {
                 uiElement.id
             )
         val treeNode =
-            hierarchy.aggregate().filter { (it.attributes["resource-id"] ?: "") == resourceName }
+            hierarchy.aggregate()
+                .filter {
+                    (it.attributes[GetHierarchyHelper.Attribute.RESOURCE_ID] ?: "") == resourceName
+                }
                 .getOrNull(uiElement.index)
         return if (treeNode == null) {
             null
@@ -76,7 +79,12 @@ internal object FindUiElementHelper {
 
     private fun findUiElementText(uiElement: UiElement.Text, hierarchy: TreeNode): FoundUiElement? {
         val treeNode = hierarchy.aggregate()
-            .filter { it.attributes["text"].equals(uiElement.text, uiElement.caseSensitive) }
+            .filter {
+                it.attributes[GetHierarchyHelper.Attribute.TEXT].equals(
+                    uiElement.text,
+                    uiElement.caseSensitive
+                )
+            }
             .getOrNull(uiElement.index)
         return if (treeNode == null) {
             null
@@ -86,8 +94,8 @@ internal object FindUiElementHelper {
     }
 
     //Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
-    private fun helper(attributes: Map<String, String>): FoundUiElement? {
-        val boundsStr = attributes["bounds"]
+    private fun helper(attributes: Map<GetHierarchyHelper.Attribute, String>): FoundUiElement? {
+        val boundsStr = attributes[GetHierarchyHelper.Attribute.BOUNDS]
             ?: return null
 
         val boundsArr = boundsStr
@@ -102,8 +110,11 @@ internal object FindUiElementHelper {
             y = boundsArr[1],
             width = boundsArr[2] - boundsArr[0],
             height = boundsArr[3] - boundsArr[1],
-            resourceId = attributes["resource-id"],
-            text = attributes["text"]
+            resourceId = attributes[GetHierarchyHelper.Attribute.RESOURCE_ID],
+            text = attributes[GetHierarchyHelper.Attribute.TEXT],
+            clickable = attributes[GetHierarchyHelper.Attribute.CLICKABLE]?.toBoolean(),
+            checked = attributes[GetHierarchyHelper.Attribute.CHECKED]?.toBoolean(),
+            enabled = attributes[GetHierarchyHelper.Attribute.ENABLED]?.toBoolean(),
         )
     }
 }
