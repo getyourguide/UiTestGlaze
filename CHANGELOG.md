@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+[0.7.0] - 2023-03-20
+
+Fixed:
+- Input text wasn't entering the text in the correct field when there are multiple input fields with the same id
+
 [0.6.0] - 2023-03-17
 
 Changed:
@@ -43,7 +48,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.6.0...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.7.0...HEAD
+[0.6.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.7.0
 [0.6.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.6.0
 [0.5.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.5.0
 [0.4.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.4.0
