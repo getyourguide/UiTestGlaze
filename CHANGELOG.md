@@ -15,6 +15,7 @@ Added:
 
 Changed:
 - Rename `caseSensitive` property inside `UiElement.Text` to `ignoreCase`
+- Made the `optional` boolean property inside `assert()` optional
 
 [0.8.0] - 2023-03-20
 

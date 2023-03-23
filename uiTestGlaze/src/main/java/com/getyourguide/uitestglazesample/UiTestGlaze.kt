@@ -35,7 +35,7 @@ data class UiTestGlaze(
         HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
     }
 
-    fun assert(assertion: Assertion, optional: Boolean): Boolean {
+    fun assert(assertion: Assertion, optional: Boolean = false): Boolean {
         val hierarchy =
             HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
         return AssertionHelper.assert(assertion, optional, hierarchy, device)
