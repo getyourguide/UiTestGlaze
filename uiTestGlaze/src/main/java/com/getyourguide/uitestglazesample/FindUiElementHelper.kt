@@ -39,7 +39,8 @@ internal object FindUiElementHelper {
                     is UiElement.ChildFrom -> TODO()
                     is UiElement.Id -> findUiElementId(uiElement, newHierarchy)
                     is UiElement.Text -> findUiElementText(uiElement, newHierarchy)
-                    is UiElement.TextRegex -> TODO()
+                    is UiElement.TextRegex -> findUiElementRegex(uiElement, newHierarchy)
+                    is UiElement.TextResource -> findUiElementTextResource(uiElement, newHierarchy)
                 }
                 if (foundUiElement != null || optional) {
                     Logger.i("FindUiElementHelper getUiElement $uiElement found so return")
@@ -57,6 +58,22 @@ internal object FindUiElementHelper {
             }
         }
         return foundUiElement
+    }
+
+    private fun findUiElementRegex(
+        uiElement: UiElement.TextRegex,
+        hierarchy: TreeNode
+    ): FoundUiElement? {
+        val treeNode = hierarchy.aggregate()
+            .filter {
+                uiElement.textRegex.matches(it.attributes[GetHierarchyHelper.Attribute.TEXT] ?: "")
+            }
+            .getOrNull(uiElement.index)
+        return if (treeNode == null) {
+            null
+        } else {
+            helper(treeNode.attributes)
+        }
     }
 
     private fun findUiElementId(uiElement: UiElement.Id, hierarchy: TreeNode): FoundUiElement? {
@@ -83,6 +100,26 @@ internal object FindUiElementHelper {
                 it.attributes[GetHierarchyHelper.Attribute.TEXT].equals(
                     uiElement.text,
                     uiElement.caseSensitive
+                )
+            }
+            .getOrNull(uiElement.index)
+        return if (treeNode == null) {
+            null
+        } else {
+            helper(treeNode.attributes)
+        }
+    }
+
+    private fun findUiElementTextResource(
+        uiElement: UiElement.TextResource,
+        hierarchy: TreeNode
+    ): FoundUiElement? {
+        val treeNode = hierarchy.aggregate()
+            .filter {
+                it.attributes[GetHierarchyHelper.Attribute.TEXT].equals(
+                    InstrumentationRegistry.getInstrumentation().targetContext.getString(
+                        uiElement.stringResourceId
+                    )
                 )
             }
             .getOrNull(uiElement.index)

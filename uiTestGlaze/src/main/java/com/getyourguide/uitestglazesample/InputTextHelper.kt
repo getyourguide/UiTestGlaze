@@ -16,10 +16,14 @@ internal object InputTextHelper {
             is UiElement.Id -> device.findObject(UiSelector().text(foundUiElement.resourceId)).text =
                 text
 
-            is UiElement.Text -> device.findObject(UiSelector().text(foundUiElement.text)).text =
+            is UiElement.Text,
+            is UiElement.TextResource,
+            is UiElement.TextRegex -> device.findObject(
+                UiSelector().text(
+                    foundUiElement.text
+                )
+            ).text =
                 text
-
-            is UiElement.TextRegex -> TODO()
         }
     }
 }

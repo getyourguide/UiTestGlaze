@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+[0.9.0] - 2023-03-23
+
+Added:
+- Find UI element with a string resource id `UiElement.TextResource`
+- Implemented `UiElement.TextRegex` find a UI element text with a Regex
+
 [0.8.0] - 2023-03-20
 
 Added:

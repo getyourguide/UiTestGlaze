@@ -1,6 +1,7 @@
 package com.getyourguide.uitestglazesample
 
 import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 
@@ -73,7 +74,12 @@ sealed class UiElement(open val index: Int = 0) {
         override val index: Int = 0
     ) : UiElement(index)
 
-    data class TextRegex(val textRegex: String, override val index: Int = 0) : UiElement(index)
+    data class TextResource(
+        @StringRes val stringResourceId: Int,
+        override val index: Int = 0
+    ) : UiElement(index)
+
+    data class TextRegex(val textRegex: Regex, override val index: Int = 0) : UiElement(index)
     data class ChildFrom(val uiElementParent: UiElement, val uiElementChild: UiElement) :
         UiElement()
 }
