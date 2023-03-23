@@ -27,7 +27,8 @@ internal object InputTextHelper {
                         text
                 }
 
-            is UiElement.Id -> {
+            is UiElement.Id,
+            is UiElement.TestTag -> {
                 device.findObject(UiSelector().text(foundUiElement.resourceId)).text = text
             }
 

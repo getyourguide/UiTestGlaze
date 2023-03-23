@@ -42,6 +42,7 @@ internal object FindUiElementHelper {
                     is UiElement.Text -> findUiElementText(uiElement, newHierarchy)
                     is UiElement.TextRegex -> findUiElementRegex(uiElement, newHierarchy)
                     is UiElement.TextResource -> findUiElementTextResource(uiElement, newHierarchy)
+                    is UiElement.TestTag -> findUIElementTestTag(uiElement, newHierarchy)
                 }
                 if (foundUiElement != null || optional) {
                     Logger.i("FindUiElementHelper getUiElement $uiElement found so return")
@@ -61,6 +62,23 @@ internal object FindUiElementHelper {
         return foundUiElement
     }
 
+    private fun findUIElementTestTag(
+        uiElement: UiElement.TestTag,
+        hierarchy: TreeNode
+    ): FoundUiElement? {
+        val treeNode =
+            hierarchy.aggregate()
+                .filter {
+                    (it.attributes[Attribute.RESOURCE_ID] ?: "") == uiElement.testTag
+                }
+                .getOrNull(uiElement.index)
+        return if (treeNode == null) {
+            null
+        } else {
+            helper(treeNode.attributes)
+        }
+    }
+
     private fun findUiChildElement(
         uiElement: UiElement.ChildFrom,
         hierarchy: TreeNode
@@ -74,6 +92,8 @@ internal object FindUiElementHelper {
                 uiElement.uiElementParent,
                 hierarchy
             )
+
+            is UiElement.TestTag -> findUIElementTestTag(uiElement.uiElementParent, hierarchy)
         } ?: return null
 
         if (foundParentUiElement.treeNode == null) {
@@ -102,6 +122,11 @@ internal object FindUiElementHelper {
             )
 
             is UiElement.TextResource -> findUiElementTextResource(
+                uiElement.uiElementChild,
+                foundParentUiElement.treeNode
+            )
+
+            is UiElement.TestTag -> findUIElementTestTag(
                 uiElement.uiElementChild,
                 foundParentUiElement.treeNode
             )

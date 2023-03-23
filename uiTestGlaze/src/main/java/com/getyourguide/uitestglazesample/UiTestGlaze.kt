@@ -68,6 +68,7 @@ data class UiTestGlaze(
 
 sealed class UiElement(open val index: Int = 0) {
     data class Id(@IdRes val id: Int, override val index: Int = 0) : UiElement(index)
+    data class TestTag(val testTag: String, override val index: Int = 0) : UiElement(index)
     data class Text(
         val text: String,
         val ignoreCase: Boolean = false,

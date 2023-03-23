@@ -10,6 +10,8 @@ Added:
 - Find UI element with a string resource id `UiElement.TextResource`
 - Implemented `UiElement.TextRegex` find a UI element text with a Regex
 - Implemented `UiElement.ChildFrom` to find a UI element inside a UI element
+- Implemented `UiElement.TestTag` to find a UI element (especially Jetpack Compose elements) with a
+  test tag
 
 Changed:
 - Rename `caseSensitive` property inside `UiElement.Text` to `ignoreCase`
