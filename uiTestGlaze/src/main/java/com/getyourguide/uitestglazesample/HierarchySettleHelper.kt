@@ -4,6 +4,7 @@ import androidx.test.uiautomator.UiDevice
 
 internal object HierarchySettleHelper {
 
+    // TODO move to a time out based approach which should also be configurable
     private const val MAX_RETRIES = 30
 
     fun waitTillHierarchySettles(

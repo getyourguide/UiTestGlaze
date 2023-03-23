@@ -26,16 +26,16 @@ import org.w3c.dom.Node
 import java.io.ByteArrayOutputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
-internal object GetHierarchyHelper {
+enum class Attribute {
+    TEXT,
+    RESOURCE_ID,
+    CLICKABLE,
+    BOUNDS,
+    CHECKED,
+    ENABLED
+}
 
-    enum class Attribute {
-        TEXT,
-        RESOURCE_ID,
-        CLICKABLE,
-        BOUNDS,
-        CHECKED,
-        ENABLED
-    }
+internal object GetHierarchyHelper {
 
     private const val MAX_TRIES = 25
 

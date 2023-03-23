@@ -9,6 +9,7 @@
 Added:
 - Find UI element with a string resource id `UiElement.TextResource`
 - Implemented `UiElement.TextRegex` find a UI element text with a Regex
+- Implemented `UiElement.ChildFrom` to find a UI element inside a UI element
 
 [0.8.0] - 2023-03-20
 
@@ -60,7 +61,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.8.0...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.9.0...HEAD
+[0.9.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.9.0
 [0.8.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.8.0
 [0.7.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.7.0
 [0.6.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.6.0

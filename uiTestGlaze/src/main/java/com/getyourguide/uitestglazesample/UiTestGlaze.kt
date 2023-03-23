@@ -80,7 +80,11 @@ sealed class UiElement(open val index: Int = 0) {
     ) : UiElement(index)
 
     data class TextRegex(val textRegex: Regex, override val index: Int = 0) : UiElement(index)
-    data class ChildFrom(val uiElementParent: UiElement, val uiElementChild: UiElement) :
+    data class ChildFrom(
+        val uiElementParent: UiElement,
+        val uiElementChild: UiElement,
+        val inputIndicatorText: Boolean = true
+    ) :
         UiElement()
 }
 
@@ -123,5 +127,6 @@ data class FoundUiElement(
     val text: String? = null,
     val clickable: Boolean? = null,
     val checked: Boolean? = null,
-    val enabled: Boolean? = null
+    val enabled: Boolean? = null,
+    val treeNode: TreeNode? = null
 )
