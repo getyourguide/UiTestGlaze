@@ -11,6 +11,9 @@ Added:
 - Implemented `UiElement.TextRegex` find a UI element text with a Regex
 - Implemented `UiElement.ChildFrom` to find a UI element inside a UI element
 
+Changed:
+- Rename `caseSensitive` property inside `UiElement.Text` to `ignoreCase`
+
 [0.8.0] - 2023-03-20
 
 Added:

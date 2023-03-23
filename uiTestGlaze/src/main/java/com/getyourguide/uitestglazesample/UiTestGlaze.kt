@@ -70,7 +70,7 @@ sealed class UiElement(open val index: Int = 0) {
     data class Id(@IdRes val id: Int, override val index: Int = 0) : UiElement(index)
     data class Text(
         val text: String,
-        val caseSensitive: Boolean = true,
+        val ignoreCase: Boolean = false,
         override val index: Int = 0
     ) : UiElement(index)
 

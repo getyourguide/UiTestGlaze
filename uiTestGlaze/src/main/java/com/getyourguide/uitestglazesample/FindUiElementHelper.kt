@@ -147,7 +147,7 @@ internal object FindUiElementHelper {
             .filter {
                 it.attributes[Attribute.TEXT].equals(
                     uiElement.text,
-                    uiElement.caseSensitive
+                    uiElement.ignoreCase
                 )
             }
             .getOrNull(uiElement.index)
