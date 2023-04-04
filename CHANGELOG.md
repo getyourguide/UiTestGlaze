@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+[0.10.0] - 2023-04-04
+
+Fixed:
+- When using `UiElement.Id` for `input` `UiSelector` was using the wrong `text` method instead of `resourceId` to find an UiElement
+
 [0.9.0] - 2023-03-23
 
 Added:

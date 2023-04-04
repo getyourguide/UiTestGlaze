@@ -23,13 +23,13 @@ internal object InputTextHelper {
                     if (foundUiElement.resourceId == null) {
                         throw IllegalStateException("Can not find resourceId to enter text")
                     }
-                    device.findObject(UiSelector().text(foundUiElement.resourceId)).text =
+                    device.findObject(UiSelector().resourceId(foundUiElement.resourceId)).text =
                         text
                 }
 
             is UiElement.Id,
             is UiElement.TestTag -> {
-                device.findObject(UiSelector().text(foundUiElement.resourceId)).text = text
+                device.findObject(UiSelector().resourceId(foundUiElement.resourceId)).text = text
             }
 
             is UiElement.Text,
