@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+[0.11.0] - 2023-04-05
+
+Fixed:
+- `TreeNode` inside `FoundUiElement` was always null
+
 [0.10.0] - 2023-04-04
 
 Fixed:
@@ -72,7 +77,9 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.9.0...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.11.0...HEAD
+[0.11.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.11.0
+[0.10.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.10.0
 [0.9.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.9.0
 [0.8.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.8.0
 [0.7.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.7.0

@@ -45,7 +45,7 @@ internal object FindUiElementHelper {
                     is UiElement.TestTag -> findUIElementTestTag(uiElement, newHierarchy)
                 }
                 if (foundUiElement != null || optional) {
-                    Logger.i("FindUiElementHelper getUiElement $uiElement found so return")
+                    Logger.i("FindUiElementHelper getUiElement $uiElement found return: $foundUiElement")
                     return@repeatBlock
                 }
                 Logger.i("FindUiElementHelper getUiElement $uiElement not found so try again")
@@ -75,7 +75,7 @@ internal object FindUiElementHelper {
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes)
+            helper(treeNode.attributes, treeNode)
         }
     }
 
@@ -145,7 +145,7 @@ internal object FindUiElementHelper {
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes)
+            helper(treeNode.attributes, treeNode)
         }
     }
 
@@ -163,7 +163,7 @@ internal object FindUiElementHelper {
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes)
+            helper(treeNode.attributes, treeNode)
         }
     }
 
@@ -179,7 +179,7 @@ internal object FindUiElementHelper {
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes)
+            helper(treeNode.attributes, treeNode)
         }
     }
 
@@ -199,12 +199,12 @@ internal object FindUiElementHelper {
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes)
+            helper(treeNode.attributes, treeNode)
         }
     }
 
     //Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
-    private fun helper(attributes: Map<Attribute, String>): FoundUiElement? {
+    private fun helper(attributes: Map<Attribute, String>, treeNode: TreeNode): FoundUiElement? {
         val boundsStr = attributes[Attribute.BOUNDS]
             ?: return null
 
@@ -225,6 +225,7 @@ internal object FindUiElementHelper {
             clickable = attributes[Attribute.CLICKABLE]?.toBoolean(),
             checked = attributes[Attribute.CHECKED]?.toBoolean(),
             enabled = attributes[Attribute.ENABLED]?.toBoolean(),
+            treeNode = treeNode
         )
     }
 }
