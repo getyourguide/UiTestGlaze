@@ -90,17 +90,17 @@ sealed class UiElement(open val index: Int = 0) {
 }
 
 sealed interface ScrollOption {
-    data class VerticalDown(val inUiElementId: UiElement.Id) : ScrollOption
-    data class HorizontalRight(val inUiElementId: UiElement.Id) : ScrollOption
+    data class VerticalDown(val inUiElementId: UiElement) : ScrollOption
+    data class HorizontalRight(val inUiElementId: UiElement) : ScrollOption
     data class Manual(val startX: Int, val startY: Int, val endX: Int, val endY: Int) : ScrollOption
     data class VerticalDownToElement(
         val toUiElement: UiElement,
-        val inUiElementId: UiElement.Id
+        val inUiElementId: UiElement
     ) : ScrollOption
 
     data class HorizontalRightToElement(
         val toUiElement: UiElement,
-        val inUiElementId: UiElement.Id
+        val inUiElementId: UiElement
     ) : ScrollOption
 }
 

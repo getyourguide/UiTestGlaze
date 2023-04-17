@@ -36,7 +36,7 @@ object ScrollHelper {
 
     private fun scrollHorizontalRightToElement(
         toUiElement: UiElement,
-        inUiElementId: UiElement.Id,
+        inUiElementId: UiElement,
         device: UiDevice
     ) {
         scroll(device, inUiElementId, toUiElement) {
@@ -44,7 +44,7 @@ object ScrollHelper {
         }
     }
 
-    private fun scrollVerticalDown(device: UiDevice, inUiElementId: UiElement.Id) {
+    private fun scrollVerticalDown(device: UiDevice, inUiElementId: UiElement) {
         val foundInUIElement = FindUiElementHelper.getUiElement(
             inUiElementId,
             GetHierarchyHelper.getHierarchy(device),
@@ -57,7 +57,7 @@ object ScrollHelper {
         device.executeShellCommand("input swipe $startAndEndXPosition $startYPosition $startAndEndXPosition $endYPosition")
     }
 
-    private fun scrollHorizontalRight(device: UiDevice, inUiElementId: UiElement.Id) {
+    private fun scrollHorizontalRight(device: UiDevice, inUiElementId: UiElement) {
         val foundInUIElement = FindUiElementHelper.getUiElement(
             inUiElementId,
             GetHierarchyHelper.getHierarchy(device),
@@ -92,7 +92,7 @@ object ScrollHelper {
 
     private fun scrollVerticalDownToElement(
         toUiElement: UiElement,
-        inUiElementId: UiElement.Id,
+        inUiElementId: UiElement,
         device: UiDevice
     ) {
         scroll(device, inUiElementId, toUiElement) {
@@ -102,7 +102,7 @@ object ScrollHelper {
 
     private fun scroll(
         device: UiDevice,
-        inUiElementId: UiElement.Id,
+        inUiElementId: UiElement,
         toUiElement: UiElement,
         scrollDirection: () -> Unit
     ) {
