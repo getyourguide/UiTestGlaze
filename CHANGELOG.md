@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+Changed:
+- Filter out empty children with no `Attribute.TEXT` or `Attribute.RESOURCE_ID` in ViewHierarchy
+
 [0.11.0] - 2023-04-05
 
 Fixed:

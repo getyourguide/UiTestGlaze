@@ -42,6 +42,27 @@ internal object GetHierarchyHelper {
     private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
 
     fun getHierarchy(device: UiDevice): TreeNode {
+        val hierarchyUnfiltered = getHierarchyUnfiltered(device)
+        val hierarchyFiltered = filterEmptyNodes(hierarchyUnfiltered)
+        return if (hierarchyFiltered.size == 1) {
+            hierarchyFiltered.first()
+        } else {
+            TreeNode(emptyMap(), hierarchyFiltered)
+        }
+    }
+
+    private fun filterEmptyNodes(root: TreeNode): List<TreeNode> {
+        val filteredChildren = root.children.flatMap { child ->
+            filterEmptyNodes(child)
+        }
+        return if (root.attributes[Attribute.TEXT]?.isNotEmpty() == true || root.attributes[Attribute.RESOURCE_ID]?.isNotEmpty() == true) {
+            listOf(TreeNode(root.attributes, filteredChildren))
+        } else {
+            filteredChildren
+        }
+    }
+
+    private fun getHierarchyUnfiltered(device: UiDevice): TreeNode {
         var currentTry = 0
         do {
             try {
