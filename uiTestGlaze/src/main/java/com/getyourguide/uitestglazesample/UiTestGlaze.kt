@@ -40,7 +40,11 @@ data class UiTestGlaze(
         val waitTillLoadingViewsGoneTimeout: Duration = 30.seconds,
         val waitTillHierarchySettlesTimeout: Duration = 30.seconds,
         val timeoutToGetAnUiElement: Duration = 10.seconds,
-        val logger: (String) -> Unit = { Log.i("UiTestGlaze", it) }
+        val logger: (String) -> Unit = {
+            if (logEverything) {
+                Log.i("UiTestGlaze", it)
+            }
+        }
     ) {
         /**
          * IdResource to wrap a resource id of a view.
