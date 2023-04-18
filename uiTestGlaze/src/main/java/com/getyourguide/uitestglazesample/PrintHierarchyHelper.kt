@@ -2,10 +2,10 @@ package com.getyourguide.uitestglazesample
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
-internal object PrintHierarchyHelper {
+internal class PrintHierarchyHelper(private val logger: Logger) {
 
     fun print(treeNode: TreeNode, prefix: String = "") {
-        Logger.i(
+        logger.i(
             prefix + jacksonObjectMapper()
                 .writerWithDefaultPrettyPrinter()
                 .writeValueAsString(treeNode)

@@ -1,10 +1,8 @@
 package com.getyourguide.uitestglazesample
 
-import android.util.Log
-
-object Logger {
+class Logger(private val logger: (String) -> Unit) {
 
     fun i(message: String) {
-        Log.i("UiTestGlaze", message)
+        logger.invoke(message)
     }
 }

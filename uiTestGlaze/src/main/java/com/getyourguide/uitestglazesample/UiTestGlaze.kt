@@ -1,5 +1,6 @@
 package com.getyourguide.uitestglazesample
 
+import android.util.Log
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.platform.app.InstrumentationRegistry
@@ -31,6 +32,7 @@ data class UiTestGlaze(
      * @property waitTillLoadingViewsGoneTimeout Timeout to wait till loading views are gone.
      * @property waitTillHierarchySettlesTimeout Timeout to wait till hierarchy settles.
      * @property timeoutToGetAnUiElement Timeout to wait till UiElement is found.
+     * @property logger Customer way to log messages.
      */
     data class Config(
         val logEverything: Boolean = false,
@@ -38,6 +40,7 @@ data class UiTestGlaze(
         val waitTillLoadingViewsGoneTimeout: Duration = 30.seconds,
         val waitTillHierarchySettlesTimeout: Duration = 30.seconds,
         val timeoutToGetAnUiElement: Duration = 10.seconds,
+        val logger: (String) -> Unit = { Log.i("UiTestGlaze", it) }
     ) {
         /**
          * IdResource to wrap a resource id of a view.
@@ -47,8 +50,19 @@ data class UiTestGlaze(
         data class IdResource(@IdRes val id: Int)
     }
 
-    private val tapHelper = TapHelper(config)
+    private val logger = Logger(config.logger)
     private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    private val getHierarchyHelper = GetHierarchyHelper(logger)
+    private val findUiElementHelper = FindUiElementHelper(logger, getHierarchyHelper)
+    private val assertionHelper = AssertionHelper(findUiElementHelper)
+    private val hierarchySettleHelper =
+        HierarchySettleHelper(getHierarchyHelper, findUiElementHelper, logger)
+    private val inputTextHelper = InputTextHelper(getHierarchyHelper, findUiElementHelper)
+    private val printHierarchyHelper = PrintHierarchyHelper(logger)
+    private val scrollHelper =
+        ScrollHelper(findUiElementHelper, getHierarchyHelper, hierarchySettleHelper)
+    private val tapHelper =
+        TapHelper(config, findUiElementHelper, hierarchySettleHelper, getHierarchyHelper)
 
     /**
      * Tap on an element and expecting the Ui to change.
@@ -65,7 +79,7 @@ data class UiTestGlaze(
         longPress: Boolean = false
     ) {
         val hierarchy =
-            HierarchySettleHelper.waitTillHierarchySettles(
+            hierarchySettleHelper.waitTillHierarchySettles(
                 config.loadingResourceIds,
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
@@ -81,8 +95,8 @@ data class UiTestGlaze(
      * @param scrollOption ScrollOption to specify the view to scroll and the direction to scroll.
      */
     fun scroll(scrollOption: ScrollOption) {
-        ScrollHelper.scroll(scrollOption, device, config)
-        HierarchySettleHelper.waitTillHierarchySettles(
+        scrollHelper.scroll(scrollOption, device, config)
+        hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
             config.waitTillLoadingViewsGoneTimeout,
@@ -99,14 +113,14 @@ data class UiTestGlaze(
      */
     fun assert(assertion: Assertion, optional: Boolean = false): Boolean {
         val hierarchy =
-            HierarchySettleHelper.waitTillHierarchySettles(
+            hierarchySettleHelper.waitTillHierarchySettles(
                 config.loadingResourceIds,
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
                 config.timeoutToGetAnUiElement
             )
-        return AssertionHelper.assert(
+        return assertionHelper.assert(
             assertion,
             optional,
             hierarchy,
@@ -122,14 +136,14 @@ data class UiTestGlaze(
      */
     fun find(uiElementIdentifier: UiElementIdentifier): UiElement? {
         val hierarchy =
-            HierarchySettleHelper.waitTillHierarchySettles(
+            hierarchySettleHelper.waitTillHierarchySettles(
                 config.loadingResourceIds,
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
                 config.timeoutToGetAnUiElement
             )
-        return FindUiElementHelper.getUiElement(
+        return findUiElementHelper.getUiElement(
             uiElementIdentifier,
             hierarchy,
             true,
@@ -145,8 +159,8 @@ data class UiTestGlaze(
      * @param uiElementIdentifier Identifier of the element to input text.
      */
     fun inputText(text: String, uiElementIdentifier: UiElementIdentifier) {
-        InputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
-        HierarchySettleHelper.waitTillHierarchySettles(
+        inputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
+        hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
             config.waitTillLoadingViewsGoneTimeout,
@@ -162,7 +176,7 @@ data class UiTestGlaze(
      */
     fun pressKey(pressKey: PressKey) {
         PressKeyHelper.pressKey(pressKey, device)
-        HierarchySettleHelper.waitTillHierarchySettles(
+        hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
             config.waitTillLoadingViewsGoneTimeout,
@@ -178,7 +192,7 @@ data class UiTestGlaze(
      */
     fun dumpViewHierarchy(waitForHierarchyToSettle: Boolean = false) {
         if (waitForHierarchyToSettle) {
-            HierarchySettleHelper.waitTillHierarchySettles(
+            hierarchySettleHelper.waitTillHierarchySettles(
                 config.loadingResourceIds,
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
@@ -186,7 +200,7 @@ data class UiTestGlaze(
                 config.timeoutToGetAnUiElement
             )
         }
-        PrintHierarchyHelper.print(GetHierarchyHelper.getHierarchy(device))
+        printHierarchyHelper.print(getHierarchyHelper.getHierarchy(device))
     }
 
 }

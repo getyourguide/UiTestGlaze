@@ -3,7 +3,7 @@ package com.getyourguide.uitestglazesample
 import androidx.test.uiautomator.UiDevice
 import kotlin.time.Duration
 
-internal object AssertionHelper {
+internal class AssertionHelper(private val findUiElementHelper: FindUiElementHelper) {
 
     fun assert(
         assertion: Assertion,
@@ -14,7 +14,7 @@ internal object AssertionHelper {
     ): Boolean {
         return when (assertion) {
             is Assertion.NotVisible -> {
-                FindUiElementHelper.getUiElement(
+                findUiElementHelper.getUiElement(
                     assertion.uiElementIdentifier,
                     hierarchy,
                     true,
@@ -24,7 +24,7 @@ internal object AssertionHelper {
             }
 
             is Assertion.Visible -> {
-                FindUiElementHelper.getUiElement(
+                findUiElementHelper.getUiElement(
                     assertion.uiElementIdentifier,
                     hierarchy,
                     optional,
@@ -34,7 +34,7 @@ internal object AssertionHelper {
             }
 
             is Assertion.Checked ->
-                FindUiElementHelper.getUiElement(
+                findUiElementHelper.getUiElement(
                     assertion.uiElementIdentifier,
                     hierarchy,
                     optional,
@@ -43,7 +43,7 @@ internal object AssertionHelper {
                 )?.checked == true
 
             is Assertion.NotChecked ->
-                FindUiElementHelper.getUiElement(
+                findUiElementHelper.getUiElement(
                     assertion.uiElementIdentifier,
                     hierarchy,
                     optional,
@@ -51,7 +51,7 @@ internal object AssertionHelper {
                     timeoutToGetAnUiElement
                 )?.checked == false
 
-            is Assertion.Enabled -> FindUiElementHelper.getUiElement(
+            is Assertion.Enabled -> findUiElementHelper.getUiElement(
                 assertion.uiElementIdentifier,
                 hierarchy,
                 optional,
@@ -59,7 +59,7 @@ internal object AssertionHelper {
                 timeoutToGetAnUiElement
             )?.enabled == true
 
-            is Assertion.NotEnabled -> FindUiElementHelper.getUiElement(
+            is Assertion.NotEnabled -> findUiElementHelper.getUiElement(
                 assertion.uiElementIdentifier,
                 hierarchy,
                 optional,

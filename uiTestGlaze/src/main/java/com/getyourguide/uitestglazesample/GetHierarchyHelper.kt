@@ -35,9 +35,9 @@ enum class Attribute {
     ENABLED
 }
 
-internal object GetHierarchyHelper {
+internal class GetHierarchyHelper(private val logger: Logger) {
 
-    private const val MAX_TRIES_TO_GET_HIERARCHY_FROM_DEVICE = 25
+    private val MAX_TRIES_TO_GET_HIERARCHY_FROM_DEVICE = 25
 
     private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
 
@@ -72,7 +72,7 @@ internal object GetHierarchyHelper {
                 return mapHierarchy(document)
                     ?: throw Exception("UiTestGlaze GetHierarchyHelper getHierarchy mapHierarchy returned null")
             } catch (e: Exception) {
-                Logger.i("GetHierarchyHelper getHierarchy exception try again")
+                logger.i("GetHierarchyHelper getHierarchy exception try again")
                 Thread.sleep(500)
                 currentTry++
                 continue
@@ -86,7 +86,7 @@ internal object GetHierarchyHelper {
         try {
             device.dumpWindowHierarchy(outputStream)
         } catch (e: Exception) {
-            Logger.i("GetHierarchyHelper getHierarchyFromDevice exception try again")
+            logger.i("GetHierarchyHelper getHierarchyFromDevice exception try again")
             Thread.sleep(500)
             device.dumpWindowHierarchy(outputStream)
         }

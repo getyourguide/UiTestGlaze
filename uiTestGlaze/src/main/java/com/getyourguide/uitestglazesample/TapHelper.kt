@@ -2,7 +2,12 @@ package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
 
-internal class TapHelper(private val config: UiTestGlaze.Config) {
+internal class TapHelper(
+    private val config: UiTestGlaze.Config,
+    private val findUiElementHelper: FindUiElementHelper,
+    private val hierarchySettleHelper: HierarchySettleHelper,
+    private val getHierarchyHelper: GetHierarchyHelper
+) {
 
     fun tap(
         uiElementIdentifier: UiElementIdentifier,
@@ -13,7 +18,7 @@ internal class TapHelper(private val config: UiTestGlaze.Config) {
         device: UiDevice
     ) {
         val foundUiElement =
-            FindUiElementHelper.getUiElement(
+            findUiElementHelper.getUiElement(
                 uiElementIdentifier,
                 hierarchy,
                 optional,
@@ -64,7 +69,7 @@ internal class TapHelper(private val config: UiTestGlaze.Config) {
     }
 
     private fun tap(x: Int, y: Int, longPress: Boolean, device: UiDevice): Boolean {
-        val hierarchyBeforeTap = GetHierarchyHelper.getHierarchy(device)
+        val hierarchyBeforeTap = getHierarchyHelper.getHierarchy(device)
 
         if (longPress) {
             device.swipe(x, y, x, y, 200)
@@ -73,7 +78,7 @@ internal class TapHelper(private val config: UiTestGlaze.Config) {
         }
 
         val hierarchyAfterTap =
-            HierarchySettleHelper.waitTillHierarchySettles(
+            hierarchySettleHelper.waitTillHierarchySettles(
                 config.loadingResourceIds,
                 device,
                 config.waitTillLoadingViewsGoneTimeout,

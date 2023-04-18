@@ -24,7 +24,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import kotlin.time.Duration
 
-internal object FindUiElementHelper {
+internal class FindUiElementHelper(
+    private val logger: Logger,
+    private val getHierarchyHelper: GetHierarchyHelper
+) {
 
     fun getUiElement(
         uiElementIdentifier: UiElementIdentifier,
@@ -75,12 +78,12 @@ internal object FindUiElementHelper {
                 )?.first
             }
             if (uiElement != null || optional) {
-                Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier found return: $uiElement")
+                logger.i("FindUiElementHelper getUiElement $uiElementIdentifier found return: $uiElement")
                 break
             }
-            Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier not found so try again")
+            logger.i("FindUiElementHelper getUiElement $uiElementIdentifier not found so try again")
             Thread.sleep(200)
-            newHierarchy = GetHierarchyHelper.getHierarchy(device)
+            newHierarchy = getHierarchyHelper.getHierarchy(device)
         } while ((System.currentTimeMillis() - startTime) < timeoutToGetAnUiElement.inWholeMilliseconds)
 
         if (uiElement == null) {

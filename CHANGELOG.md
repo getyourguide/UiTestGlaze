@@ -12,6 +12,7 @@ Added:
 - Documentation!
 - `Assertion.Checked` and `Assertion.NotChecked` to check if a checkbox/switch is checked or not
 - `Assertion.Enabled` and `Assertion.NotEnabled` to check if a view is enabled or not
+- Option to provide an own way to log stuff
 
 Changed:
 - Filter out empty children with no `Attribute.TEXT` or `Attribute.RESOURCE_ID` in ViewHierarchy

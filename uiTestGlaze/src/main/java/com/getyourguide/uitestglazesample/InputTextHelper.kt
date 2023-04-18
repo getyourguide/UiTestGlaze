@@ -1,11 +1,13 @@
 package com.getyourguide.uitestglazesample
 
-import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import kotlin.time.Duration
 
-internal object InputTextHelper {
+internal class InputTextHelper(
+    private val getHierarchyHelper: GetHierarchyHelper,
+    private val findUiElementHelper: FindUiElementHelper
+) {
 
     fun inputText(
         text: String,
@@ -13,9 +15,9 @@ internal object InputTextHelper {
         device: UiDevice,
         timeoutToGetAnUiElement: Duration
     ) {
-        val hierarchy = GetHierarchyHelper.getHierarchy(device)
+        val hierarchy = getHierarchyHelper.getHierarchy(device)
         val foundUiElement =
-            FindUiElementHelper.getUiElement(
+            findUiElementHelper.getUiElement(
                 uiElementIdentifier,
                 hierarchy,
                 false,
