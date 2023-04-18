@@ -26,8 +26,8 @@ class VerticalListTest {
             tap(UiElementIdentifier.Text("List", true))
             scroll(
                 ScrollOption.VerticalDownToElement(
-                    UiElementIdentifier.Text("42"),
-                    UiElementIdentifier.Id(R.id.list)
+                    toUiElement = UiElementIdentifier.Text("42"),
+                    inUiElement = UiElementIdentifier.Id(R.id.list)
                 )
             )
             assert(Assertion.Visible(UiElementIdentifier.Text("42")), false)
