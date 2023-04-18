@@ -355,6 +355,20 @@ sealed interface Assertion {
      * @param uiElementIdentifier Identifier of the UiElement to assert.
      */
     data class NotChecked(val uiElementIdentifier: UiElementIdentifier) : Assertion
+
+    /**
+     * Assert that a given UiElement is enabled.
+     *
+     * @param uiElementIdentifier Identifier of the UiElement to assert.
+     */
+    data class Enabled(val uiElementIdentifier: UiElementIdentifier) : Assertion
+
+    /**
+     * Assert that a given UiElement is not enabled.
+     *
+     * @param uiElementIdentifier Identifier of the UiElement to assert.
+     */
+    data class NotEnabled(val uiElementIdentifier: UiElementIdentifier) : Assertion
 }
 
 /**

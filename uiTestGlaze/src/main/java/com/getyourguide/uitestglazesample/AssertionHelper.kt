@@ -50,6 +50,22 @@ internal object AssertionHelper {
                     uiDevice,
                     timeoutToGetAnUiElement
                 )?.checked == false
+
+            is Assertion.Enabled -> FindUiElementHelper.getUiElement(
+                assertion.uiElementIdentifier,
+                hierarchy,
+                optional,
+                uiDevice,
+                timeoutToGetAnUiElement
+            )?.enabled == true
+
+            is Assertion.NotEnabled -> FindUiElementHelper.getUiElement(
+                assertion.uiElementIdentifier,
+                hierarchy,
+                optional,
+                uiDevice,
+                timeoutToGetAnUiElement
+            )?.enabled == false
         }
     }
 }
