@@ -1,17 +1,25 @@
 package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
+import kotlin.time.Duration
 
 internal object AssertionHelper {
 
-    fun assert(assertion: Assertion, optional: Boolean, hierarchy: TreeNode, uiDevice: UiDevice): Boolean {
+    fun assert(
+        assertion: Assertion,
+        optional: Boolean,
+        hierarchy: TreeNode,
+        uiDevice: UiDevice,
+        timeoutToGetAnUiElement: Duration
+    ): Boolean {
         return when (assertion) {
             is Assertion.NotVisible -> {
                 FindUiElementHelper.getUiElement(
                     assertion.uiElementIdentifier,
                     hierarchy,
                     optional,
-                    uiDevice
+                    uiDevice,
+                    timeoutToGetAnUiElement
                 ) == null
             }
 
@@ -20,7 +28,8 @@ internal object AssertionHelper {
                     assertion.uiElementIdentifier,
                     hierarchy,
                     optional,
-                    uiDevice
+                    uiDevice,
+                    timeoutToGetAnUiElement
                 ) != null
             }
         }

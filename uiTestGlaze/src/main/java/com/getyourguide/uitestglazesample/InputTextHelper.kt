@@ -2,13 +2,25 @@ package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import kotlin.time.Duration
 
 internal object InputTextHelper {
 
-    fun inputText(text: String, uiElementIdentifier: UiElementIdentifier, device: UiDevice) {
+    fun inputText(
+        text: String,
+        uiElementIdentifier: UiElementIdentifier,
+        device: UiDevice,
+        timeoutToGetAnUiElement: Duration
+    ) {
         val hierarchy = GetHierarchyHelper.getHierarchy(device)
         val foundUiElement =
-            FindUiElementHelper.getUiElement(uiElementIdentifier, hierarchy, false, device)
+            FindUiElementHelper.getUiElement(
+                uiElementIdentifier,
+                hierarchy,
+                false,
+                device,
+                timeoutToGetAnUiElement
+            )
                 ?: throw IllegalStateException("Can not find UiElement to enter text")
 
         when (uiElementIdentifier) {

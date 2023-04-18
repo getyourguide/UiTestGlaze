@@ -37,7 +37,7 @@ enum class Attribute {
 
 internal object GetHierarchyHelper {
 
-    private const val MAX_TRIES = 25
+    private const val MAX_TRIES_TO_GET_HIERARCHY_FROM_DEVICE = 25
 
     private val documentBuilderFactory = DocumentBuilderFactory.newInstance()
 
@@ -77,7 +77,7 @@ internal object GetHierarchyHelper {
                 currentTry++
                 continue
             }
-        } while (currentTry < MAX_TRIES)
+        } while (currentTry < MAX_TRIES_TO_GET_HIERARCHY_FROM_DEVICE)
         throw IllegalStateException("Timeout hit while waiting for hierarchy to settle")
     }
 

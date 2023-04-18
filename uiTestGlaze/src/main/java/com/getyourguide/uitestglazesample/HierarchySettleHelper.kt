@@ -1,20 +1,21 @@
 package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
+import kotlin.time.Duration
 
 internal object HierarchySettleHelper {
 
-    // TODO move to a time out based approach which should also be configurable
-    private const val MAX_RETRIES = 30
-
     fun waitTillHierarchySettles(
         loadingResourceIds: List<UiTestGlaze.Config.IdResource>,
-        device: UiDevice
+        device: UiDevice,
+        waitTillLoadingViewsGoneTimeout: Duration,
+        waitTillHierarchySettlesTimeout: Duration,
+        timeoutToGetAnUiElement: Duration
     ): TreeNode {
         Thread.sleep(200)
         var currentTry = 0
         var hierarchy: TreeNode = GetHierarchyHelper.getHierarchy(device)
-
+        val startTimeLoadingViews = System.currentTimeMillis()
         do {
             val isLoadingViewShown = loadingResourceIds.asSequence()
                 .mapNotNull {
@@ -22,7 +23,8 @@ internal object HierarchySettleHelper {
                         UiElementIdentifier.Id(it.id),
                         hierarchy,
                         true,
-                        device
+                        device,
+                        timeoutToGetAnUiElement
                     )
                 }.any()
             if (isLoadingViewShown) {
@@ -31,14 +33,15 @@ internal object HierarchySettleHelper {
                 Thread.sleep(200)
                 hierarchy = GetHierarchyHelper.getHierarchy(device)
             }
-        } while (isLoadingViewShown && currentTry < MAX_RETRIES)
+        } while (isLoadingViewShown && (System.currentTimeMillis() - startTimeLoadingViews) < waitTillLoadingViewsGoneTimeout.inWholeMilliseconds)
 
-        if (currentTry == MAX_RETRIES) {
+        if ((System.currentTimeMillis() - startTimeLoadingViews) >= waitTillLoadingViewsGoneTimeout.inWholeMilliseconds) {
             throw IllegalStateException("Timeout hit while waiting for loading view to disappear")
         }
 
         Thread.sleep(200)
-        repeat(25) {
+        val startTimeHierarchySettle = System.currentTimeMillis()
+        do {
             val hierarchyAfter = GetHierarchyHelper.getHierarchy(device)
             if (hierarchyAfter == hierarchy) {
                 return hierarchyAfter
@@ -47,7 +50,7 @@ internal object HierarchySettleHelper {
             Thread.sleep(200)
             hierarchy = GetHierarchyHelper.getHierarchy(device)
             Thread.sleep(200)
-        }
+        } while ((System.currentTimeMillis() - startTimeHierarchySettle) < waitTillHierarchySettlesTimeout.inWholeMilliseconds)
         throw IllegalStateException("Timeout hit while waiting for hierarchy to settle")
     }
 }

@@ -13,7 +13,13 @@ internal class TapHelper(private val config: UiTestGlaze.Config) {
         device: UiDevice
     ) {
         val foundUiElement =
-            FindUiElementHelper.getUiElement(uiElementIdentifier, hierarchy, optional, device) ?: return
+            FindUiElementHelper.getUiElement(
+                uiElementIdentifier,
+                hierarchy,
+                optional,
+                device,
+                config.timeoutToGetAnUiElement
+            ) ?: return
         tapOnTreeNode(foundUiElement, optional, retryCount, longPress, device)
     }
 
@@ -67,7 +73,13 @@ internal class TapHelper(private val config: UiTestGlaze.Config) {
         }
 
         val hierarchyAfterTap =
-            HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+            HierarchySettleHelper.waitTillHierarchySettles(
+                config.loadingResourceIds,
+                device,
+                config.waitTillLoadingViewsGoneTimeout,
+                config.waitTillHierarchySettlesTimeout,
+                config.timeoutToGetAnUiElement
+            )
 
         return hierarchyAfterTap != hierarchyBeforeTap
     }

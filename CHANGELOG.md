@@ -6,6 +6,9 @@
 
 Added:
 - `UiElementIdentifier.PositionInHierarchy` to select an element with the position
+- `waitTillLoadingViewsGoneTimeout` to the config
+- `waitTillHierarchySettlesTimeout` to the config
+- `timeoutToGetAnUiElement` to the config
 
 Changed:
 - Filter out empty children with no `Attribute.TEXT` or `Attribute.RESOURCE_ID` in ViewHierarchy

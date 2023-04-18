@@ -22,6 +22,7 @@ package com.getyourguide.uitestglazesample
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import kotlin.time.Duration
 
 internal object FindUiElementHelper {
 
@@ -29,58 +30,58 @@ internal object FindUiElementHelper {
         uiElementIdentifier: UiElementIdentifier,
         hierarchy: TreeNode,
         optional: Boolean,
-        device: UiDevice
+        device: UiDevice,
+        timeoutToGetAnUiElement: Duration
     ): UiElement? {
         var newHierarchy = hierarchy
-        var uiElement: UiElement? = null
-        run repeatBlock@{
-            // TODO move to a time out based approach which should also be configurable
-            repeat(20) {
-                uiElement = when (uiElementIdentifier) {
-                    is UiElementIdentifier.ChildFrom -> findUiChildElement(
-                        uiElementIdentifier,
-                        newHierarchy
-                    )?.first
+        var uiElement: UiElement?
 
-                    is UiElementIdentifier.Id -> findUiElementId(
-                        uiElementIdentifier,
-                        newHierarchy
-                    )?.first
+        val startTime = System.currentTimeMillis()
+        do {
+            uiElement = when (uiElementIdentifier) {
+                is UiElementIdentifier.ChildFrom -> findUiChildElement(
+                    uiElementIdentifier,
+                    newHierarchy
+                )?.first
 
-                    is UiElementIdentifier.Text -> findUiElementText(
-                        uiElementIdentifier,
-                        newHierarchy
-                    )?.first
+                is UiElementIdentifier.Id -> findUiElementId(
+                    uiElementIdentifier,
+                    newHierarchy
+                )?.first
 
-                    is UiElementIdentifier.TextRegex -> findUiElementRegex(
-                        uiElementIdentifier,
-                        newHierarchy
-                    )?.first
+                is UiElementIdentifier.Text -> findUiElementText(
+                    uiElementIdentifier,
+                    newHierarchy
+                )?.first
 
-                    is UiElementIdentifier.TextResource -> findUiElementTextResource(
-                        uiElementIdentifier,
-                        newHierarchy
-                    )?.first
+                is UiElementIdentifier.TextRegex -> findUiElementRegex(
+                    uiElementIdentifier,
+                    newHierarchy
+                )?.first
 
-                    is UiElementIdentifier.TestTag -> findUIElementTestTag(
-                        uiElementIdentifier,
-                        newHierarchy
-                    )?.first
+                is UiElementIdentifier.TextResource -> findUiElementTextResource(
+                    uiElementIdentifier,
+                    newHierarchy
+                )?.first
 
-                    is UiElementIdentifier.PositionInHierarchy -> findUiElementPositionInHierarchy(
-                        uiElementIdentifier,
-                        newHierarchy
-                    )?.first
-                }
-                if (uiElement != null || optional) {
-                    Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier found return: $uiElement")
-                    return@repeatBlock
-                }
-                Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier not found so try again")
-                Thread.sleep(200)
-                newHierarchy = GetHierarchyHelper.getHierarchy(device)
+                is UiElementIdentifier.TestTag -> findUIElementTestTag(
+                    uiElementIdentifier,
+                    newHierarchy
+                )?.first
+
+                is UiElementIdentifier.PositionInHierarchy -> findUiElementPositionInHierarchy(
+                    uiElementIdentifier,
+                    newHierarchy
+                )?.first
             }
-        }
+            if (uiElement != null || optional) {
+                Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier found return: $uiElement")
+                break
+            }
+            Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier not found so try again")
+            Thread.sleep(200)
+            newHierarchy = GetHierarchyHelper.getHierarchy(device)
+        } while ((System.currentTimeMillis() - startTime) < timeoutToGetAnUiElement.inWholeMilliseconds)
 
         if (uiElement == null) {
             if (!optional) {

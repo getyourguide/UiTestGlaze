@@ -4,6 +4,8 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 data class UiTestGlaze(
     private val config: Config = Config()
@@ -11,7 +13,9 @@ data class UiTestGlaze(
     data class Config(
         val logEverything: Boolean = false,
         val loadingResourceIds: List<IdResource> = emptyList(),
-        val tapRetryCount: Int = 3
+        val waitTillLoadingViewsGoneTimeout: Duration = 30.seconds,
+        val waitTillHierarchySettlesTimeout: Duration = 30.seconds,
+        val timeoutToGetAnUiElement: Duration = 10.seconds,
     ) {
         data class IdResource(@IdRes val id: Int)
     }
@@ -26,40 +30,94 @@ data class UiTestGlaze(
         longPress: Boolean = false
     ) {
         val hierarchy =
-            HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+            HierarchySettleHelper.waitTillHierarchySettles(
+                config.loadingResourceIds,
+                device,
+                config.waitTillLoadingViewsGoneTimeout,
+                config.waitTillHierarchySettlesTimeout,
+                config.timeoutToGetAnUiElement
+            )
         tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, hierarchy, device)
     }
 
     fun scroll(scrollOption: ScrollOption) {
-        ScrollHelper.scroll(scrollOption, device)
-        HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+        ScrollHelper.scroll(scrollOption, device, config)
+        HierarchySettleHelper.waitTillHierarchySettles(
+            config.loadingResourceIds,
+            device,
+            config.waitTillLoadingViewsGoneTimeout,
+            config.waitTillHierarchySettlesTimeout,
+            config.timeoutToGetAnUiElement
+        )
     }
 
     fun assert(assertion: Assertion, optional: Boolean = false): Boolean {
         val hierarchy =
-            HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
-        return AssertionHelper.assert(assertion, optional, hierarchy, device)
+            HierarchySettleHelper.waitTillHierarchySettles(
+                config.loadingResourceIds,
+                device,
+                config.waitTillLoadingViewsGoneTimeout,
+                config.waitTillHierarchySettlesTimeout,
+                config.timeoutToGetAnUiElement
+            )
+        return AssertionHelper.assert(
+            assertion,
+            optional,
+            hierarchy,
+            device,
+            config.timeoutToGetAnUiElement
+        )
     }
 
     fun find(uiElementIdentifier: UiElementIdentifier): UiElement? {
         val hierarchy =
-            HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
-        return FindUiElementHelper.getUiElement(uiElementIdentifier, hierarchy, true, device)
+            HierarchySettleHelper.waitTillHierarchySettles(
+                config.loadingResourceIds,
+                device,
+                config.waitTillLoadingViewsGoneTimeout,
+                config.waitTillHierarchySettlesTimeout,
+                config.timeoutToGetAnUiElement
+            )
+        return FindUiElementHelper.getUiElement(
+            uiElementIdentifier,
+            hierarchy,
+            true,
+            device,
+            config.timeoutToGetAnUiElement
+        )
     }
 
     fun inputText(text: String, uiElementIdentifier: UiElementIdentifier) {
-        InputTextHelper.inputText(text, uiElementIdentifier, device)
-        HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+        InputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
+        HierarchySettleHelper.waitTillHierarchySettles(
+            config.loadingResourceIds,
+            device,
+            config.waitTillLoadingViewsGoneTimeout,
+            config.waitTillHierarchySettlesTimeout,
+            config.timeoutToGetAnUiElement
+        )
     }
 
     fun pressKey(pressKey: PressKey) {
         PressKeyHelper.pressKey(pressKey, device)
-        HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+        HierarchySettleHelper.waitTillHierarchySettles(
+            config.loadingResourceIds,
+            device,
+            config.waitTillLoadingViewsGoneTimeout,
+            config.waitTillHierarchySettlesTimeout,
+            config.timeoutToGetAnUiElement
+        )
     }
 
     fun dumpViewHierarchy(waitForHierarchyToSettle: Boolean = false) {
         if (waitForHierarchyToSettle) {
-            HierarchySettleHelper.waitTillHierarchySettles(config.loadingResourceIds, device)
+            HierarchySettleHelper.waitTillHierarchySettles(
+                config.loadingResourceIds,
+                device,
+                config.waitTillLoadingViewsGoneTimeout,
+                config.waitTillHierarchySettlesTimeout,
+                config.timeoutToGetAnUiElement
+            )
         }
         PrintHierarchyHelper.print(GetHierarchyHelper.getHierarchy(device))
     }
