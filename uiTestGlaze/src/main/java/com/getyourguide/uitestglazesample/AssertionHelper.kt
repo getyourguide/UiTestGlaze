@@ -17,7 +17,7 @@ internal object AssertionHelper {
                 FindUiElementHelper.getUiElement(
                     assertion.uiElementIdentifier,
                     hierarchy,
-                    optional,
+                    true,
                     uiDevice,
                     timeoutToGetAnUiElement
                 ) == null
@@ -32,6 +32,24 @@ internal object AssertionHelper {
                     timeoutToGetAnUiElement
                 ) != null
             }
+
+            is Assertion.Checked ->
+                FindUiElementHelper.getUiElement(
+                    assertion.uiElementIdentifier,
+                    hierarchy,
+                    optional,
+                    uiDevice,
+                    timeoutToGetAnUiElement
+                )?.checked == true
+
+            is Assertion.NotChecked ->
+                FindUiElementHelper.getUiElement(
+                    assertion.uiElementIdentifier,
+                    hierarchy,
+                    optional,
+                    uiDevice,
+                    timeoutToGetAnUiElement
+                )?.checked == false
         }
     }
 }

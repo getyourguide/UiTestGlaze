@@ -1,5 +1,6 @@
 package com.getyourguide.uitestglazesample
 
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import kotlin.time.Duration

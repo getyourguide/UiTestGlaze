@@ -10,6 +10,7 @@ Added:
 - `waitTillHierarchySettlesTimeout` to the config
 - `timeoutToGetAnUiElement` to the config
 - Documentation!
+- `Assertion.Checked` and `Assertion.NotChecked` to check if a checkbox/switch is checked or not
 
 Changed:
 - Filter out empty children with no `Attribute.TEXT` or `Attribute.RESOURCE_ID` in ViewHierarchy

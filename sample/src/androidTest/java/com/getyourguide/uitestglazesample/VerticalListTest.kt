@@ -13,8 +13,24 @@ class VerticalListTest {
     fun testVerticalListScrolling() {
         testRule.launchActivity(null)
         with(UiTestGlaze()) {
-            tap(UiElement.Text("List", false))
-            scroll(ScrollOption.VerticalDown(UiElement.Id(R.id.list)))
+            tap(UiElementIdentifier.Text("List", true))
+            scroll(ScrollOption.VerticalDown(UiElementIdentifier.Id(R.id.list)))
+            assert(Assertion.Visible(UiElementIdentifier.Text("17")), false)
+        }
+    }
+
+    @Test
+    fun testVerticalListScrollToElement() {
+        testRule.launchActivity(null)
+        with(UiTestGlaze()) {
+            tap(UiElementIdentifier.Text("List", true))
+            scroll(
+                ScrollOption.VerticalDownToElement(
+                    UiElementIdentifier.Text("42"),
+                    UiElementIdentifier.Id(R.id.list)
+                )
+            )
+            assert(Assertion.Visible(UiElementIdentifier.Text("42")), false)
         }
     }
 }

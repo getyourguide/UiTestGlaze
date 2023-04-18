@@ -341,6 +341,20 @@ sealed interface Assertion {
      * @param uiElementIdentifier Identifier of the UiElement to assert.
      */
     data class NotVisible(val uiElementIdentifier: UiElementIdentifier) : Assertion
+
+    /**
+     * Assert that a given UiElement is checked.
+     *
+     * @param uiElementIdentifier Identifier of the UiElement to assert.
+     */
+    data class Checked(val uiElementIdentifier: UiElementIdentifier) : Assertion
+
+    /**
+     * Assert that a given UiElement is not checked.
+     *
+     * @param uiElementIdentifier Identifier of the UiElement to assert.
+     */
+    data class NotChecked(val uiElementIdentifier: UiElementIdentifier) : Assertion
 }
 
 /**
