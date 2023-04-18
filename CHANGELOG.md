@@ -9,6 +9,7 @@ Added:
 - `waitTillLoadingViewsGoneTimeout` to the config
 - `waitTillHierarchySettlesTimeout` to the config
 - `timeoutToGetAnUiElement` to the config
+- Documentation!
 
 Changed:
 - Filter out empty children with no `Attribute.TEXT` or `Attribute.RESOURCE_ID` in ViewHierarchy

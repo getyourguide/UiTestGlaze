@@ -7,9 +7,31 @@ import androidx.test.uiautomator.UiDevice
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * UiTestGlaze is a library to help you write UI tests.
+ *
+ * It provides a simple API to tap, scroll, wait, assert and more.
+ * It's advisable to use UiTestGlaze with the scope function `with()`.
+ *
+ * ```
+ * with(UiTestGlaze()) {
+ *   tap(UiElementIdentifier.Text("Hello"))
+ *   assert(Assertion.Visible(UiElementIdentifier.Text("World")))
+ * }
+ * ```
+ */
 data class UiTestGlaze(
     private val config: Config = Config()
 ) {
+    /**
+     * Configure UiTestGlaze.
+     *
+     * @property logEverything If true, UiTestGlaze will log everything it does.
+     * @property loadingResourceIds List of resource ids of views that are considered as loading views. UiTestGlaze will wait till these views are gone.
+     * @property waitTillLoadingViewsGoneTimeout Timeout to wait till loading views are gone.
+     * @property waitTillHierarchySettlesTimeout Timeout to wait till hierarchy settles.
+     * @property timeoutToGetAnUiElement Timeout to wait till UiElement is found.
+     */
     data class Config(
         val logEverything: Boolean = false,
         val loadingResourceIds: List<IdResource> = emptyList(),
@@ -17,12 +39,25 @@ data class UiTestGlaze(
         val waitTillHierarchySettlesTimeout: Duration = 30.seconds,
         val timeoutToGetAnUiElement: Duration = 10.seconds,
     ) {
+        /**
+         * IdResource to wrap a resource id of a view.
+         *
+         * @property id Resource id of a view.
+         */
         data class IdResource(@IdRes val id: Int)
     }
 
     private val tapHelper = TapHelper(config)
     private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
+    /**
+     * Tap on an element and expecting the Ui to change.
+     *
+     * @param uiElementIdentifier Identifier of the element to tap.
+     * @param optional If true, UiTestGlaze will not throw an exception if the element is not found.
+     * @param retryCount Number of times to retry if the Ui does not change after tapping.
+     * @param longPress If true, UiTestGlaze will long press on the element.
+     */
     fun tap(
         uiElementIdentifier: UiElementIdentifier,
         optional: Boolean = false,
@@ -40,6 +75,11 @@ data class UiTestGlaze(
         tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, hierarchy, device)
     }
 
+    /**
+     * Scroll a view.
+     *
+     * @param scrollOption ScrollOption to specify the view to scroll and the direction to scroll.
+     */
     fun scroll(scrollOption: ScrollOption) {
         ScrollHelper.scroll(scrollOption, device, config)
         HierarchySettleHelper.waitTillHierarchySettles(
@@ -51,6 +91,12 @@ data class UiTestGlaze(
         )
     }
 
+    /**
+     * Assert an assertion.
+     *
+     * @param assertion Assertion to assert.
+     * @param optional If true, UiTestGlaze will not throw an exception if the assertion fails.
+     */
     fun assert(assertion: Assertion, optional: Boolean = false): Boolean {
         val hierarchy =
             HierarchySettleHelper.waitTillHierarchySettles(
@@ -69,6 +115,11 @@ data class UiTestGlaze(
         )
     }
 
+    /**
+     * Find a UiElement in the current hierarchy.
+     *
+     * @param uiElementIdentifier Identifier of the element to find.
+     */
     fun find(uiElementIdentifier: UiElementIdentifier): UiElement? {
         val hierarchy =
             HierarchySettleHelper.waitTillHierarchySettles(
@@ -87,6 +138,12 @@ data class UiTestGlaze(
         )
     }
 
+    /**
+     * Input text to an element.
+     *
+     * @param text Text to input.
+     * @param uiElementIdentifier Identifier of the element to input text.
+     */
     fun inputText(text: String, uiElementIdentifier: UiElementIdentifier) {
         InputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
         HierarchySettleHelper.waitTillHierarchySettles(
@@ -98,6 +155,11 @@ data class UiTestGlaze(
         )
     }
 
+    /**
+     * Press a key.
+     *
+     * @param pressKey Key to press.
+     */
     fun pressKey(pressKey: PressKey) {
         PressKeyHelper.pressKey(pressKey, device)
         HierarchySettleHelper.waitTillHierarchySettles(
@@ -109,6 +171,11 @@ data class UiTestGlaze(
         )
     }
 
+    /**
+     * Dump the current view hierarchy.
+     *
+     * @param waitForHierarchyToSettle If true, UiTestGlaze will wait till the hierarchy settles before dumping.
+     */
     fun dumpViewHierarchy(waitForHierarchyToSettle: Boolean = false) {
         if (waitForHierarchyToSettle) {
             HierarchySettleHelper.waitTillHierarchySettles(
@@ -124,67 +191,212 @@ data class UiTestGlaze(
 
 }
 
+/**
+ * UiElementIdentifier is used to identify a UiElement.
+ *
+ * @param index Index of the element to identify. If there are multiple elements with the same identifier, this index will be used to identify the element.
+ */
 sealed class UiElementIdentifier(open val index: Int = 0) {
+    /**
+     * Identifier of an element by its resource id.
+     *
+     * @param id Resource id of the element.
+     * @param index Index of the element to identify. If there are multiple elements with the same identifier, this index will be used to identify the element.
+     */
     data class Id(@IdRes val id: Int, override val index: Int = 0) : UiElementIdentifier(index)
+
+    /**
+     * Identifier of an element by its set test tag. Used to identify Jetpack Compose views.
+     *
+     * @param testTag Test tag of the element.
+     * @param index Index of the element to identify. If there are multiple elements with the same identifier, this index will be used to identify the element.
+     */
     data class TestTag(val testTag: String, override val index: Int = 0) :
         UiElementIdentifier(index)
 
+    /**
+     * Identifier of an element by its text.
+     *
+     * @param text Text of the element.
+     * @param ignoreCase If true, the text will be matched ignoring case.
+     * @param index Index of the element to identify. If there are multiple elements with the same identifier, this index will be used to identify the element.
+     */
     data class Text(
         val text: String,
         val ignoreCase: Boolean = false,
         override val index: Int = 0
     ) : UiElementIdentifier(index)
 
+    /**
+     * Identifier of an element by its text resource id.
+     *
+     * @param stringResourceId Resource id of the text of the element.
+     * @param index Index of the element to identify. If there are multiple elements with the same identifier, this index will be used to identify the element.
+     */
     data class TextResource(
         @StringRes val stringResourceId: Int,
         override val index: Int = 0
     ) : UiElementIdentifier(index)
 
+    /**
+     * Identifier of an element by its text regex.
+     *
+     * @param textRegex Regex of the text of the element.
+     * @param index Index of the element to identify. If there are multiple elements with the same identifier, this index will be used to identify the element.
+     */
     data class TextRegex(val textRegex: Regex, override val index: Int = 0) :
         UiElementIdentifier(index)
 
+    /**
+     * Identifier to find an UiElement inside another UiElement.
+     *
+     * @param uiElementIdentifierParent Identifier of the parent element.
+     * @param uiElementIdentifierChild Identifier of the child element.
+     * @param inputIndicatorText If true, UiTestGlaze will use the text as identifier to input a given text into a view.
+     */
     data class ChildFrom(
         val uiElementIdentifierParent: UiElementIdentifier,
         val uiElementIdentifierChild: UiElementIdentifier,
         val inputIndicatorText: Boolean = true
     ) : UiElementIdentifier()
 
+    /**
+     * Identifier to find an UiElement by its position in the hierarchy.
+     * CAUTION: The position inside the hierarchy is not deterministic!
+     *
+     * @param index Index of the element to identify in the hierarchy.
+     * @param inputIndicatorText If true, UiTestGlaze will use the text as identifier to input a given text into a view.
+     */
     data class PositionInHierarchy(
         override val index: Int = 0,
         val inputIndicatorText: Boolean = true
     ) : UiElementIdentifier(index)
 }
 
+/**
+ * ScrollOption is used to specify how to scroll.
+ */
 sealed interface ScrollOption {
+    /**
+     * Scroll vertical down.
+     *
+     * @param inUiElement UiElement to scroll in.
+     */
     data class VerticalDown(val inUiElement: UiElementIdentifier) : ScrollOption
+
+    /**
+     * Scroll vertical up.
+     *
+     * @param inUiElement UiElement to scroll in.
+     */
     data class HorizontalRight(val inUiElement: UiElementIdentifier) : ScrollOption
+
+    /**
+     * Manual scroll.
+     *
+     * @param startX Start x position of the scroll.
+     * @param startY Start y position of the scroll.
+     * @param endX End x position of the scroll.
+     * @param endY End y position of the scroll.
+     */
     data class Manual(val startX: Int, val startY: Int, val endX: Int, val endY: Int) : ScrollOption
+
+    /**
+     * Scroll vertical down to a given UiElement.
+     *
+     * @param toUiElement UiElement to scroll to.
+     * @param inUiElement UiElement to scroll in.
+     */
     data class VerticalDownToElement(
         val toUiElement: UiElementIdentifier,
         val inUiElement: UiElementIdentifier
     ) : ScrollOption
 
+    /**
+     * Scroll vertical up to a given UiElement.
+     *
+     * @param toUiElement UiElement to scroll to.
+     * @param inUiElement UiElement to scroll in.
+     */
     data class HorizontalRightToElement(
         val toUiElement: UiElementIdentifier,
         val inUiElement: UiElementIdentifier
     ) : ScrollOption
 }
 
+/**
+ * Assert a given view.
+ */
 sealed interface Assertion {
+    /**
+     * Assert that a given UiElement is visible.
+     *
+     * @param uiElementIdentifier Identifier of the UiElement to assert.
+     */
     data class Visible(val uiElementIdentifier: UiElementIdentifier) : Assertion
+
+    /**
+     * Assert that a given UiElement is not visible.
+     *
+     * @param uiElementIdentifier Identifier of the UiElement to assert.
+     */
     data class NotVisible(val uiElementIdentifier: UiElementIdentifier) : Assertion
 }
 
+/**
+ * Press a hardware key.
+ */
 sealed interface PressKey {
+    /**
+     * Press the hardware key "Enter".
+     */
     object Enter : PressKey
+
+    /**
+     * Press the hardware key "Backspace".
+     */
     object Backspace : PressKey
+
+    /**
+     * Press the hardware key "Back".
+     */
     object Back : PressKey
+
+    /**
+     * Press the hardware key "Home".
+     */
     object Home : PressKey
+
+    /**
+     * Press the hardware key "Lock".
+     */
     object Lock : PressKey
+
+    /**
+     * Press the hardware key "VolumeUp".
+     */
     object VolumeUp : PressKey
+
+    /**
+     * Press the hardware key "VolumeDown".
+     */
     object VolumeDown : PressKey
 }
 
+/**
+ * Data class of an UiElement from the hierarchy.
+ *
+ * @property x X position of the element on the screen.
+ * @property y Y position of the element on the screen.
+ * @property width Width of the element.
+ * @property height Height of the element.
+ * @property resourceId Resource id of the element.
+ * @property text Text of the element.
+ * @property clickable If true, the element is clickable.
+ * @property checked If true, the element is checked.
+ * @property enabled If true, the element is enabled.
+ * @property children List of children of the element.
+ */
 data class UiElement(
     val x: Int,
     val y: Int,
