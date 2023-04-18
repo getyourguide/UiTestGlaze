@@ -5,38 +5,61 @@ import androidx.test.uiautomator.UiSelector
 
 internal object InputTextHelper {
 
-    fun inputText(text: String, uiElement: UiElement, device: UiDevice) {
+    fun inputText(text: String, uiElementIdentifier: UiElementIdentifier, device: UiDevice) {
         val hierarchy = GetHierarchyHelper.getHierarchy(device)
-        val foundUiElement = FindUiElementHelper.getUiElement(uiElement, hierarchy, false, device)
-            ?: throw IllegalStateException("Can not find UiElement to enter text")
+        val foundUiElement =
+            FindUiElementHelper.getUiElement(uiElementIdentifier, hierarchy, false, device)
+                ?: throw IllegalStateException("Can not find UiElement to enter text")
 
-        when (uiElement) {
-            is UiElement.ChildFrom ->
-                if (uiElement.inputIndicatorText) {
-                    if (foundUiElement.text == null) {
-                        throw IllegalStateException("Can not find text to enter text")
-                    }
-                    UiSelector().text(
-                        foundUiElement.text
-                    )
-                } else {
-                    if (foundUiElement.resourceId == null) {
-                        throw IllegalStateException("Can not find resourceId to enter text")
-                    }
-                    device.findObject(UiSelector().resourceId(foundUiElement.resourceId)).text =
-                        text
-                }
+        when (uiElementIdentifier) {
+            is UiElementIdentifier.PositionInHierarchy ->
+                enterText(
+                    uiElementIdentifier.inputIndicatorText,
+                    foundUiElement.text,
+                    foundUiElement.resourceId,
+                    device,
+                    text
+                )
 
-            is UiElement.Id,
-            is UiElement.TestTag -> {
+            is UiElementIdentifier.ChildFrom ->
+                enterText(
+                    uiElementIdentifier.inputIndicatorText,
+                    foundUiElement.text,
+                    foundUiElement.resourceId,
+                    device,
+                    text
+                )
+
+            is UiElementIdentifier.Id,
+            is UiElementIdentifier.TestTag -> {
                 device.findObject(UiSelector().resourceId(foundUiElement.resourceId)).text = text
             }
 
-            is UiElement.Text,
-            is UiElement.TextResource,
-            is UiElement.TextRegex -> {
+            is UiElementIdentifier.Text,
+            is UiElementIdentifier.TextResource,
+            is UiElementIdentifier.TextRegex -> {
                 device.findObject(UiSelector().text(foundUiElement.text)).text = text
             }
+        }
+    }
+
+    private fun enterText(
+        inputIndicatorText: Boolean,
+        uiElementText: String?,
+        uiElementResId: String?,
+        device: UiDevice,
+        text: String
+    ) {
+        if (inputIndicatorText) {
+            if (uiElementText == null) {
+                throw IllegalStateException("Can not find text to enter text")
+            }
+            device.findObject(UiSelector().text(uiElementText)).text = text
+        } else {
+            if (uiElementResId == null) {
+                throw IllegalStateException("Can not find resourceId to enter text")
+            }
+            device.findObject(UiSelector().resourceId(uiElementResId)).text = text
         }
     }
 }

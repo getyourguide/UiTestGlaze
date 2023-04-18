@@ -8,7 +8,7 @@ internal object AssertionHelper {
         return when (assertion) {
             is Assertion.NotVisible -> {
                 FindUiElementHelper.getUiElement(
-                    assertion.uiElement,
+                    assertion.uiElementIdentifier,
                     hierarchy,
                     optional,
                     uiDevice
@@ -17,7 +17,7 @@ internal object AssertionHelper {
 
             is Assertion.Visible -> {
                 FindUiElementHelper.getUiElement(
-                    assertion.uiElement,
+                    assertion.uiElementIdentifier,
                     hierarchy,
                     optional,
                     uiDevice

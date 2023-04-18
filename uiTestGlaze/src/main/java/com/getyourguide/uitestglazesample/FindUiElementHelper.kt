@@ -26,185 +26,257 @@ import androidx.test.uiautomator.UiDevice
 internal object FindUiElementHelper {
 
     fun getUiElement(
-        uiElement: UiElement,
+        uiElementIdentifier: UiElementIdentifier,
         hierarchy: TreeNode,
         optional: Boolean,
         device: UiDevice
-    ): FoundUiElement? {
+    ): UiElement? {
         var newHierarchy = hierarchy
-        var foundUiElement: FoundUiElement? = null
+        var uiElement: UiElement? = null
         run repeatBlock@{
             // TODO move to a time out based approach which should also be configurable
             repeat(20) {
-                foundUiElement = when (uiElement) {
-                    is UiElement.ChildFrom -> findUiChildElement(uiElement, newHierarchy)
-                    is UiElement.Id -> findUiElementId(uiElement, newHierarchy)
-                    is UiElement.Text -> findUiElementText(uiElement, newHierarchy)
-                    is UiElement.TextRegex -> findUiElementRegex(uiElement, newHierarchy)
-                    is UiElement.TextResource -> findUiElementTextResource(uiElement, newHierarchy)
-                    is UiElement.TestTag -> findUIElementTestTag(uiElement, newHierarchy)
+                uiElement = when (uiElementIdentifier) {
+                    is UiElementIdentifier.ChildFrom -> findUiChildElement(
+                        uiElementIdentifier,
+                        newHierarchy
+                    )?.first
+
+                    is UiElementIdentifier.Id -> findUiElementId(
+                        uiElementIdentifier,
+                        newHierarchy
+                    )?.first
+
+                    is UiElementIdentifier.Text -> findUiElementText(
+                        uiElementIdentifier,
+                        newHierarchy
+                    )?.first
+
+                    is UiElementIdentifier.TextRegex -> findUiElementRegex(
+                        uiElementIdentifier,
+                        newHierarchy
+                    )?.first
+
+                    is UiElementIdentifier.TextResource -> findUiElementTextResource(
+                        uiElementIdentifier,
+                        newHierarchy
+                    )?.first
+
+                    is UiElementIdentifier.TestTag -> findUIElementTestTag(
+                        uiElementIdentifier,
+                        newHierarchy
+                    )?.first
+
+                    is UiElementIdentifier.PositionInHierarchy -> findUiElementPositionInHierarchy(
+                        uiElementIdentifier,
+                        newHierarchy
+                    )?.first
                 }
-                if (foundUiElement != null || optional) {
-                    Logger.i("FindUiElementHelper getUiElement $uiElement found return: $foundUiElement")
+                if (uiElement != null || optional) {
+                    Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier found return: $uiElement")
                     return@repeatBlock
                 }
-                Logger.i("FindUiElementHelper getUiElement $uiElement not found so try again")
+                Logger.i("FindUiElementHelper getUiElement $uiElementIdentifier not found so try again")
                 Thread.sleep(200)
                 newHierarchy = GetHierarchyHelper.getHierarchy(device)
             }
         }
 
-        if (foundUiElement == null) {
+        if (uiElement == null) {
             if (!optional) {
-                throw IllegalStateException("Couldn't find uiElement: $uiElement")
+                throw IllegalStateException("Couldn't find uiElement: $uiElementIdentifier")
             }
         }
-        return foundUiElement
+        return uiElement
     }
 
-    private fun findUIElementTestTag(
-        uiElement: UiElement.TestTag,
+    private fun findUiElementPositionInHierarchy(
+        uiElementIdentifier: UiElementIdentifier.PositionInHierarchy,
         hierarchy: TreeNode
-    ): FoundUiElement? {
-        val treeNode =
-            hierarchy.aggregate()
-                .filter {
-                    (it.attributes[Attribute.RESOURCE_ID] ?: "") == uiElement.testTag
-                }
-                .getOrNull(uiElement.index)
+    ): Pair<UiElement?, TreeNode>? {
+        val treeNode = hierarchy.aggregate().getOrNull(uiElementIdentifier.index)
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes, treeNode)
+            Pair(toUiElement(treeNode.attributes, treeNode), treeNode)
+        }
+    }
+
+    private fun findUIElementTestTag(
+        uiTestTagResourceIdentifier: UiElementIdentifier.TestTag,
+        hierarchy: TreeNode
+    ): Pair<UiElement?, TreeNode>? {
+        val treeNode =
+            hierarchy.aggregate()
+                .filter {
+                    (it.attributes[Attribute.RESOURCE_ID]
+                        ?: "") == uiTestTagResourceIdentifier.testTag
+                }
+                .getOrNull(uiTestTagResourceIdentifier.index)
+        return if (treeNode == null) {
+            null
+        } else {
+            Pair(toUiElement(treeNode.attributes, treeNode), treeNode)
         }
     }
 
     private fun findUiChildElement(
-        uiElement: UiElement.ChildFrom,
+        uiChildFromResourceIdentifier: UiElementIdentifier.ChildFrom,
         hierarchy: TreeNode
-    ): FoundUiElement? {
-        val foundParentUiElement = when (uiElement.uiElementParent) {
-            is UiElement.ChildFrom -> throw IllegalStateException("Can not have childFrom option as parent")
-            is UiElement.Id -> findUiElementId(uiElement.uiElementParent, hierarchy)
-            is UiElement.Text -> findUiElementText(uiElement.uiElementParent, hierarchy)
-            is UiElement.TextRegex -> findUiElementRegex(uiElement.uiElementParent, hierarchy)
-            is UiElement.TextResource -> findUiElementTextResource(
-                uiElement.uiElementParent,
+    ): Pair<UiElement?, TreeNode>? {
+        val foundParentUiElement = when (uiChildFromResourceIdentifier.uiElementIdentifierParent) {
+            is UiElementIdentifier.ChildFrom -> throw IllegalStateException("Can not have childFrom option as parent")
+            is UiElementIdentifier.Id -> findUiElementId(
+                uiChildFromResourceIdentifier.uiElementIdentifierParent,
                 hierarchy
             )
 
-            is UiElement.TestTag -> findUIElementTestTag(uiElement.uiElementParent, hierarchy)
+            is UiElementIdentifier.Text -> findUiElementText(
+                uiChildFromResourceIdentifier.uiElementIdentifierParent,
+                hierarchy
+            )
+
+            is UiElementIdentifier.TextRegex -> findUiElementRegex(
+                uiChildFromResourceIdentifier.uiElementIdentifierParent,
+                hierarchy
+            )
+
+            is UiElementIdentifier.TextResource -> findUiElementTextResource(
+                uiChildFromResourceIdentifier.uiElementIdentifierParent,
+                hierarchy
+            )
+
+            is UiElementIdentifier.TestTag -> findUIElementTestTag(
+                uiChildFromResourceIdentifier.uiElementIdentifierParent,
+                hierarchy
+            )
+
+            is UiElementIdentifier.PositionInHierarchy -> findUiElementPositionInHierarchy(
+                uiChildFromResourceIdentifier.uiElementIdentifierParent,
+                hierarchy
+            )
         } ?: return null
 
-        if (foundParentUiElement.treeNode == null) {
+        if (foundParentUiElement.first == null) {
             return null
         }
 
-        return when (uiElement.uiElementChild) {
-            is UiElement.ChildFrom -> findUiChildElement(
-                uiElement.uiElementChild,
-                foundParentUiElement.treeNode
+        return when (uiChildFromResourceIdentifier.uiElementIdentifierChild) {
+            is UiElementIdentifier.ChildFrom -> findUiChildElement(
+                uiChildFromResourceIdentifier.uiElementIdentifierChild,
+                foundParentUiElement.second
             )
 
-            is UiElement.Id -> findUiElementId(
-                uiElement.uiElementChild,
-                foundParentUiElement.treeNode
+            is UiElementIdentifier.Id -> findUiElementId(
+                uiChildFromResourceIdentifier.uiElementIdentifierChild,
+                foundParentUiElement.second
             )
 
-            is UiElement.Text -> findUiElementText(
-                uiElement.uiElementChild,
-                foundParentUiElement.treeNode
+            is UiElementIdentifier.Text -> findUiElementText(
+                uiChildFromResourceIdentifier.uiElementIdentifierChild,
+                foundParentUiElement.second
             )
 
-            is UiElement.TextRegex -> findUiElementRegex(
-                uiElement.uiElementChild,
-                foundParentUiElement.treeNode
+            is UiElementIdentifier.TextRegex -> findUiElementRegex(
+                uiChildFromResourceIdentifier.uiElementIdentifierChild,
+                foundParentUiElement.second
             )
 
-            is UiElement.TextResource -> findUiElementTextResource(
-                uiElement.uiElementChild,
-                foundParentUiElement.treeNode
+            is UiElementIdentifier.TextResource -> findUiElementTextResource(
+                uiChildFromResourceIdentifier.uiElementIdentifierChild,
+                foundParentUiElement.second
             )
 
-            is UiElement.TestTag -> findUIElementTestTag(
-                uiElement.uiElementChild,
-                foundParentUiElement.treeNode
+            is UiElementIdentifier.TestTag -> findUIElementTestTag(
+                uiChildFromResourceIdentifier.uiElementIdentifierChild,
+                foundParentUiElement.second
+            )
+
+            is UiElementIdentifier.PositionInHierarchy -> findUiElementPositionInHierarchy(
+                uiChildFromResourceIdentifier.uiElementIdentifierChild,
+                foundParentUiElement.second
             )
         }
     }
 
     private fun findUiElementRegex(
-        uiElement: UiElement.TextRegex,
+        uiTextRegexResourceIdentifier: UiElementIdentifier.TextRegex,
         hierarchy: TreeNode
-    ): FoundUiElement? {
+    ): Pair<UiElement?, TreeNode>? {
         val treeNode = hierarchy.aggregate()
             .filter {
-                uiElement.textRegex.matches(it.attributes[Attribute.TEXT] ?: "")
+                uiTextRegexResourceIdentifier.textRegex.matches(it.attributes[Attribute.TEXT] ?: "")
             }
-            .getOrNull(uiElement.index)
+            .getOrNull(uiTextRegexResourceIdentifier.index)
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes, treeNode)
+            Pair(toUiElement(treeNode.attributes, treeNode), treeNode)
         }
     }
 
-    private fun findUiElementId(uiElement: UiElement.Id, hierarchy: TreeNode): FoundUiElement? {
+    private fun findUiElementId(
+        uiIdResourceIdentifier: UiElementIdentifier.Id,
+        hierarchy: TreeNode
+    ): Pair<UiElement?, TreeNode>? {
         val resourceName =
             InstrumentationRegistry.getInstrumentation().targetContext.resources.getResourceName(
-                uiElement.id
+                uiIdResourceIdentifier.id
             )
         val treeNode =
             hierarchy.aggregate()
                 .filter {
                     (it.attributes[Attribute.RESOURCE_ID] ?: "") == resourceName
                 }
-                .getOrNull(uiElement.index)
+                .getOrNull(uiIdResourceIdentifier.index)
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes, treeNode)
+            Pair(toUiElement(treeNode.attributes, treeNode), treeNode)
         }
     }
 
-    private fun findUiElementText(uiElement: UiElement.Text, hierarchy: TreeNode): FoundUiElement? {
+    private fun findUiElementText(
+        uiTextIdentifier: UiElementIdentifier.Text,
+        hierarchy: TreeNode
+    ): Pair<UiElement?, TreeNode>? {
         val treeNode = hierarchy.aggregate()
             .filter {
                 it.attributes[Attribute.TEXT].equals(
-                    uiElement.text,
-                    uiElement.ignoreCase
+                    uiTextIdentifier.text,
+                    uiTextIdentifier.ignoreCase
                 )
             }
-            .getOrNull(uiElement.index)
+            .getOrNull(uiTextIdentifier.index)
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes, treeNode)
+            Pair(toUiElement(treeNode.attributes, treeNode), treeNode)
         }
     }
 
     private fun findUiElementTextResource(
-        uiElement: UiElement.TextResource,
+        uiTextResourceIdentifier: UiElementIdentifier.TextResource,
         hierarchy: TreeNode
-    ): FoundUiElement? {
+    ): Pair<UiElement?, TreeNode>? {
         val treeNode = hierarchy.aggregate()
             .filter {
                 it.attributes[Attribute.TEXT].equals(
                     InstrumentationRegistry.getInstrumentation().targetContext.getString(
-                        uiElement.stringResourceId
+                        uiTextResourceIdentifier.stringResourceId
                     )
                 )
             }
-            .getOrNull(uiElement.index)
+            .getOrNull(uiTextResourceIdentifier.index)
         return if (treeNode == null) {
             null
         } else {
-            helper(treeNode.attributes, treeNode)
+            Pair(toUiElement(treeNode.attributes, treeNode), treeNode)
         }
     }
 
     //Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
-    private fun helper(attributes: Map<Attribute, String>, treeNode: TreeNode): FoundUiElement? {
+    private fun toUiElement(attributes: Map<Attribute, String>, treeNode: TreeNode): UiElement? {
         val boundsStr = attributes[Attribute.BOUNDS]
             ?: return null
 
@@ -215,7 +287,7 @@ internal object FindUiElementHelper {
             .split(",")
             .map { it.toInt() }
 
-        return FoundUiElement(
+        return UiElement(
             x = boundsArr[0],
             y = boundsArr[1],
             width = boundsArr[2] - boundsArr[0],
@@ -225,7 +297,7 @@ internal object FindUiElementHelper {
             clickable = attributes[Attribute.CLICKABLE]?.toBoolean(),
             checked = attributes[Attribute.CHECKED]?.toBoolean(),
             enabled = attributes[Attribute.ENABLED]?.toBoolean(),
-            treeNode = treeNode
+            children = treeNode.children.mapNotNull { toUiElement(it.attributes, it) }
         )
     }
 }

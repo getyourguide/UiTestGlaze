@@ -5,7 +5,7 @@ import androidx.test.uiautomator.UiDevice
 internal class TapHelper(private val config: UiTestGlaze.Config) {
 
     fun tap(
-        uiElement: UiElement,
+        uiElementIdentifier: UiElementIdentifier,
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
@@ -13,20 +13,20 @@ internal class TapHelper(private val config: UiTestGlaze.Config) {
         device: UiDevice
     ) {
         val foundUiElement =
-            FindUiElementHelper.getUiElement(uiElement, hierarchy, optional, device) ?: return
+            FindUiElementHelper.getUiElement(uiElementIdentifier, hierarchy, optional, device) ?: return
         tapOnTreeNode(foundUiElement, optional, retryCount, longPress, device)
     }
 
     private fun tapOnTreeNode(
-        foundUiElement: FoundUiElement,
+        uiElement: UiElement,
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
         device: UiDevice
     ) {
         tap(
-            foundUiElement.x + (foundUiElement.width) / 2,
-            foundUiElement.y + (foundUiElement.height) / 2,
+            uiElement.x + (uiElement.width) / 2,
+            uiElement.y + (uiElement.height) / 2,
             optional,
             retryCount,
             longPress,

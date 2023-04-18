@@ -4,9 +4,14 @@
 
 ## [Unreleased]
 
+Added:
+- `UiElementIdentifier.PositionInHierarchy` to select an element with the position
+
 Changed:
 - Filter out empty children with no `Attribute.TEXT` or `Attribute.RESOURCE_ID` in ViewHierarchy
 - Allow all `UiElement` options to be used for `ScrollOption`
+- Rename `UiElement` to `UiElementIdentifier`
+- Rename `FoundUiElement` to `UiElement`
 
 [0.11.0] - 2023-04-05
 

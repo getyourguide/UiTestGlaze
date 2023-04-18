@@ -21,7 +21,7 @@
 package com.getyourguide.uitestglazesample
 
 //Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
-data class TreeNode(
+internal data class TreeNode(
     val attributes: Map<Attribute, String> = emptyMap(),
     val children: List<TreeNode> = emptyList(),
 ) {

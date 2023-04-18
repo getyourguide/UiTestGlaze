@@ -19,7 +19,7 @@ internal object HierarchySettleHelper {
             val isLoadingViewShown = loadingResourceIds.asSequence()
                 .mapNotNull {
                     FindUiElementHelper.getUiElement(
-                        UiElement.Id(it.id),
+                        UiElementIdentifier.Id(it.id),
                         hierarchy,
                         true,
                         device
