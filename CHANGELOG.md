@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+[1.0.0] - 2023-04-18
+
 Added:
 - `UiElementIdentifier.PositionInHierarchy` to select an element with the position
 - `waitTillLoadingViewsGoneTimeout` to the config
@@ -93,7 +95,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/0.11.0...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.0
 [0.11.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.11.0
 [0.10.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.10.0
 [0.9.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.9.0
