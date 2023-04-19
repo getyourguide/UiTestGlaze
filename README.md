@@ -1,6 +1,13 @@
 # UiTestGlaze 🍰
 Solid and easy-to-write Android UI tests.
 
+## Download
+Import UiTestGlaze as a testing dependency:
+
+```gradle
+androidTestImplementation('io.github.getyourguide:uitestglaze:LATEST_VERSION')
+```
+
 ## API
 
 ### Tap
