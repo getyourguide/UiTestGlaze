@@ -1,5 +1,5 @@
 # UiTestGlaze 🍰
-Solid and easy-to-write Android UI tests.
+Solid and effortless Android UI tests.
 
 ## Download
 Import UiTestGlaze as a testing dependency:
