@@ -1,5 +1,7 @@
 # UiTestGlaze 🍰
-Solid and effortless Android UI tests.
+Are you tired of dealing with flaky, time-consuming unreadable Android UI tests?
+
+UiTestGlaze offers stable and effortless testing, making the process enjoyable again. With a focus on readability and ease of use, UiTestGlaze is the perfect solution for your UI testing needs. Whether you want to use it for an entire test or just certain parts, UiTestGlaze has you covered. Don't waste any more time on frustrating UI tests.
 
 ## Download
 Import UiTestGlaze as a testing dependency:
@@ -9,6 +11,17 @@ androidTestImplementation('io.github.getyourguide:uitestglaze:LATEST_VERSION')
 ```
 
 ## API
+
+### Config
+UiTestGlaze accepts a `Config` option. With this config it's possible to define the log level, timeouts and provide loading views. When UiTestGlaze detects a provided loading view it will automatically wait till the loading view is gone. Of course, you can also define a timeout how long UiTestGlaze should wait till an error is thrown. E.g.:
+
+```kotlin
+UiTestGlaze(config = UiTestGlaze.Config(
+		loadingResourceIds = listOf(R.id.loading_view),
+		waitTillLoadingViewsGoneTimeout = 30.seconds
+	)
+)
+```
 
 ### Tap
 Tap on an element with the text `"Click me"`:
@@ -103,7 +116,7 @@ UiTestGlaze().find(UiElementIdentifier.Id(R.id.list, true))
 ```
 
 ### Something is missing or not working?
-Submit an Issue!
+Submit an [Issue](https://github.com/getyourguide/UiTestGlaze/issues/new)!
 
 ## License
 
