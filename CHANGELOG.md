@@ -10,6 +10,9 @@ Changed:
 - `LoadingResource` inside `Config` is now a sealed interface.
 It's now possible to find a loading view with a test tag.
 
+Added:
+- `tap` function with raw x and y position to tap on a specific position on the screen
+
 [1.0.0] - 2023-04-18
 
 Added:

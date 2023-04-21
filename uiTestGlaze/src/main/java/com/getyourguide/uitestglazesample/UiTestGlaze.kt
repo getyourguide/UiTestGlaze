@@ -82,7 +82,7 @@ data class UiTestGlaze(
         TapHelper(config, findUiElementHelper, hierarchySettleHelper, getHierarchyHelper)
 
     /**
-     * Tap on an element and expecting the Ui to change.
+     * Tap on an element and expecting the UI to change.
      *
      * @param uiElementIdentifier Identifier of the element to tap.
      * @param optional If true, UiTestGlaze will not throw an exception if the element is not found.
@@ -107,12 +107,21 @@ data class UiTestGlaze(
     }
 
     /**
-     * Scroll a view.
+     * Tap on a defined position and expecting the UI to change.
      *
-     * @param scrollOption ScrollOption to specify the view to scroll and the direction to scroll.
+     * @param xPosition X position to tap.
+     * @param yPosition Y position to tap.
+     * @param optional If true, UiTestGlaze will not throw an exception if the element is not found.
+     * @param retryCount Number of times to retry if the Ui does not change after tapping.
+     * @param longPress If true, UiTestGlaze will long press on the element.
      */
-    fun scroll(scrollOption: ScrollOption) {
-        scrollHelper.scroll(scrollOption, device, config)
+    fun tap(
+        xPosition: Int,
+        yPosition: Int,
+        optional: Boolean = false,
+        retryCount: Int = 3,
+        longPress: Boolean = false
+    ) {
         hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
@@ -120,6 +129,23 @@ data class UiTestGlaze(
             config.waitTillHierarchySettlesTimeout,
             config.timeoutToGetAnUiElement
         )
+        tapHelper.tap(xPosition, yPosition, optional, retryCount, longPress, device)
+    }
+
+    /**
+     * Scroll a view.
+     *
+     * @param scrollOption ScrollOption to specify the view to scroll and the direction to scroll.
+     */
+    fun scroll(scrollOption: ScrollOption) {
+        hierarchySettleHelper.waitTillHierarchySettles(
+            config.loadingResourceIds,
+            device,
+            config.waitTillLoadingViewsGoneTimeout,
+            config.waitTillHierarchySettlesTimeout,
+            config.timeoutToGetAnUiElement
+        )
+        scrollHelper.scroll(scrollOption, device, config)
     }
 
     /**
@@ -176,7 +202,6 @@ data class UiTestGlaze(
      * @param uiElementIdentifier Identifier of the element to input text.
      */
     fun inputText(text: String, uiElementIdentifier: UiElementIdentifier) {
-        inputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
         hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
@@ -184,6 +209,7 @@ data class UiTestGlaze(
             config.waitTillHierarchySettlesTimeout,
             config.timeoutToGetAnUiElement
         )
+        inputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
     }
 
     /**
@@ -192,7 +218,6 @@ data class UiTestGlaze(
      * @param pressKey Key to press.
      */
     fun pressKey(pressKey: PressKey) {
-        PressKeyHelper.pressKey(pressKey, device)
         hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
@@ -200,6 +225,7 @@ data class UiTestGlaze(
             config.waitTillHierarchySettlesTimeout,
             config.timeoutToGetAnUiElement
         )
+        PressKeyHelper.pressKey(pressKey, device)
     }
 
     /**

@@ -46,7 +46,7 @@ internal class TapHelper(
     }
 
 
-    private fun tap(
+    fun tap(
         x: Int,
         y: Int,
         optional: Boolean,
