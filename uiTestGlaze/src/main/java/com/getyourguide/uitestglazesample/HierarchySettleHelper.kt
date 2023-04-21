@@ -10,7 +10,7 @@ internal class HierarchySettleHelper(
 ) {
 
     fun waitTillHierarchySettles(
-        loadingResourceIds: List<UiTestGlaze.Config.IdResource>,
+        loadingResourceIds: List<UiTestGlaze.Config.LoadingResource>,
         device: UiDevice,
         waitTillLoadingViewsGoneTimeout: Duration,
         waitTillHierarchySettlesTimeout: Duration,
@@ -24,7 +24,7 @@ internal class HierarchySettleHelper(
             val isLoadingViewShown = loadingResourceIds.asSequence()
                 .mapNotNull {
                     findUiElementHelper.getUiElement(
-                        UiElementIdentifier.Id(it.id),
+                        getUiElementIdentifier(it),
                         hierarchy,
                         true,
                         device,
@@ -56,5 +56,17 @@ internal class HierarchySettleHelper(
             Thread.sleep(200)
         } while ((System.currentTimeMillis() - startTimeHierarchySettle) < waitTillHierarchySettlesTimeout.inWholeMilliseconds)
         throw IllegalStateException("Timeout hit while waiting for hierarchy to settle")
+    }
+
+    private fun getUiElementIdentifier(loadingResource: UiTestGlaze.Config.LoadingResource): UiElementIdentifier {
+        return when (loadingResource) {
+            is UiTestGlaze.Config.LoadingResource.IdResource -> {
+                UiElementIdentifier.Id(loadingResource.id)
+            }
+
+            is UiTestGlaze.Config.LoadingResource.TestTagResource -> {
+                UiElementIdentifier.TestTag(loadingResource.testTag)
+            }
+        }
     }
 }

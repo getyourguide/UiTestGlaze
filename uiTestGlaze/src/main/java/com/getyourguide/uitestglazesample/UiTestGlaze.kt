@@ -36,7 +36,7 @@ data class UiTestGlaze(
      */
     data class Config(
         val logEverything: Boolean = false,
-        val loadingResourceIds: List<IdResource> = emptyList(),
+        val loadingResourceIds: List<LoadingResource> = emptyList(),
         val waitTillLoadingViewsGoneTimeout: Duration = 30.seconds,
         val waitTillHierarchySettlesTimeout: Duration = 30.seconds,
         val timeoutToGetAnUiElement: Duration = 10.seconds,
@@ -46,12 +46,25 @@ data class UiTestGlaze(
             }
         }
     ) {
+
         /**
-         * IdResource to wrap a resource id of a view.
-         *
-         * @property id Resource id of a view.
+         * LoadingResource is a sealed class to wrap a resource id or a test tag of a view.
          */
-        data class IdResource(@IdRes val id: Int)
+        sealed interface LoadingResource {
+            /**
+             * IdResource to wrap a resource id of a view.
+             *
+             * @param id Resource id of a view.
+             */
+            data class IdResource(@IdRes val id: Int) : LoadingResource
+
+            /**
+             * TestTagResource to wrap a test tag of a view. Mainly used to find Jetpack Compose views.
+             *
+             * @param testTag Test tag of a view.
+             */
+            data class TestTagResource(val testTag: String) : LoadingResource
+        }
     }
 
     private val logger = Logger(config.logger)

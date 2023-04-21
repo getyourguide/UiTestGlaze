@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+[1.0.1] - 2023-04-21
+
+Changed:
+- `LoadingResource` inside `Config` is now a sealed interface.
+It's now possible to find a loading view with a test tag.
+
 [1.0.0] - 2023-04-18
 
 Added:
@@ -95,7 +101,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.0.0...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.1
 [1.0.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.0
 [0.11.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.11.0
 [0.10.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.10.0
