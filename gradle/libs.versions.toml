@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.8.10"
+kotlin = "1.8.21"
 gradleplugin = "7.4.1"
 androidx-annotation = "1.6.0"
 androidx-test-monitor = "1.6.1"
