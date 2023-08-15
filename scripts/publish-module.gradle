@@ -24,8 +24,6 @@ afterEvaluate {
 
                 from components.release
 
-                artifact androidSourcesJar
-
                 pom {
                     name = PUBLISH_ARTIFACT_ID
                     description = 'Solid and easy to write Android UI tests'

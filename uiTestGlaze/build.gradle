@@ -38,10 +38,6 @@ spotless {
     }
 }
 
-afterEvaluate {
-    generateMetadataFileForReleasePublication.dependsOn androidSourcesJar
-}
-
 dependencies {
     implementation libs.androidx.annotation
     implementation libs.androidx.test.monitor
