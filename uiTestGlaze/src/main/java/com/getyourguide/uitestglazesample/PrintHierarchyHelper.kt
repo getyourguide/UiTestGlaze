@@ -8,7 +8,7 @@ internal class PrintHierarchyHelper(private val logger: Logger) {
         logger.i(
             prefix + jacksonObjectMapper()
                 .writerWithDefaultPrettyPrinter()
-                .writeValueAsString(treeNode)
+                .writeValueAsString(treeNode),
         )
     }
 }

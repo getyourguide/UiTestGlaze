@@ -1,6 +1,7 @@
 plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
+    alias libs.plugins.spotless
 }
 
 ext {
@@ -27,6 +28,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        ktlint("0.49.1")
     }
 }
 

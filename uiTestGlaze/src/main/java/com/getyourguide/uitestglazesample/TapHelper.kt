@@ -6,7 +6,7 @@ internal class TapHelper(
     private val config: UiTestGlaze.Config,
     private val findUiElementHelper: FindUiElementHelper,
     private val hierarchySettleHelper: HierarchySettleHelper,
-    private val getHierarchyHelper: GetHierarchyHelper
+    private val getHierarchyHelper: GetHierarchyHelper,
 ) {
 
     fun tap(
@@ -15,7 +15,7 @@ internal class TapHelper(
         retryCount: Int,
         longPress: Boolean,
         hierarchy: TreeNode,
-        device: UiDevice
+        device: UiDevice,
     ) {
         val foundUiElement =
             findUiElementHelper.getUiElement(
@@ -23,7 +23,7 @@ internal class TapHelper(
                 hierarchy,
                 optional,
                 device,
-                config.timeoutToGetAnUiElement
+                config.timeoutToGetAnUiElement,
             ) ?: return
         tapOnTreeNode(foundUiElement, optional, retryCount, longPress, device)
     }
@@ -33,7 +33,7 @@ internal class TapHelper(
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
-        device: UiDevice
+        device: UiDevice,
     ) {
         tap(
             uiElement.x + (uiElement.width) / 2,
@@ -41,10 +41,9 @@ internal class TapHelper(
             optional,
             retryCount,
             longPress,
-            device
+            device,
         )
     }
-
 
     fun tap(
         x: Int,
@@ -52,7 +51,7 @@ internal class TapHelper(
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
-        device: UiDevice
+        device: UiDevice,
     ) {
         var currentTry = 1
         while (currentTry <= retryCount) {
@@ -83,7 +82,7 @@ internal class TapHelper(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement
+                config.timeoutToGetAnUiElement,
             )
 
         return hierarchyAfterTap != hierarchyBeforeTap

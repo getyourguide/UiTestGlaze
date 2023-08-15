@@ -20,7 +20,7 @@
 
 package com.getyourguide.uitestglazesample
 
-//Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
+// Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
 internal data class TreeNode(
     val attributes: Map<Attribute, String> = emptyMap(),
     val children: List<TreeNode> = emptyList(),
@@ -29,5 +29,4 @@ internal data class TreeNode(
     fun aggregate(): List<TreeNode> {
         return listOf(this) + children.flatMap { it.aggregate() }
     }
-
 }

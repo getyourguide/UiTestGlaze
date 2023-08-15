@@ -32,7 +32,7 @@ enum class Attribute {
     CLICKABLE,
     BOUNDS,
     CHECKED,
-    ENABLED
+    ENABLED,
 }
 
 internal class GetHierarchyHelper(private val logger: Logger) {
@@ -96,12 +96,12 @@ internal class GetHierarchyHelper(private val logger: Logger) {
     private fun isNotSystembar(node: Element): Boolean {
         if (node.hasAttribute("resource-id")) {
             return node.getAttribute("resource-id") != "com.android.systemui:id/status_bar_container" &&
-                    node.getAttribute("resource-id") != "com.android.systemui:id/status_bar_launch_animation_container"
+                node.getAttribute("resource-id") != "com.android.systemui:id/status_bar_launch_animation_container"
         }
         return true
     }
 
-    //Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
+    // Copied and adapted from mobile-dev-inc/maestro (https://github.com/mobile-dev-inc/maestro)
     private fun mapHierarchy(node: Node): TreeNode? {
         val attributes = if (node is Element && isNotSystembar(node)) {
             val attributesBuilder = mutableMapOf<Attribute, String>()

@@ -6,14 +6,14 @@ import kotlin.time.Duration
 
 internal class InputTextHelper(
     private val getHierarchyHelper: GetHierarchyHelper,
-    private val findUiElementHelper: FindUiElementHelper
+    private val findUiElementHelper: FindUiElementHelper,
 ) {
 
     fun inputText(
         text: String,
         uiElementIdentifier: UiElementIdentifier,
         device: UiDevice,
-        timeoutToGetAnUiElement: Duration
+        timeoutToGetAnUiElement: Duration,
     ) {
         val hierarchy = getHierarchyHelper.getHierarchy(device)
         val foundUiElement =
@@ -22,7 +22,7 @@ internal class InputTextHelper(
                 hierarchy,
                 false,
                 device,
-                timeoutToGetAnUiElement
+                timeoutToGetAnUiElement,
             )
                 ?: throw IllegalStateException("Can not find UiElement to enter text")
 
@@ -33,7 +33,7 @@ internal class InputTextHelper(
                     foundUiElement.text,
                     foundUiElement.resourceId,
                     device,
-                    text
+                    text,
                 )
 
             is UiElementIdentifier.ChildFrom ->
@@ -42,17 +42,19 @@ internal class InputTextHelper(
                     foundUiElement.text,
                     foundUiElement.resourceId,
                     device,
-                    text
+                    text,
                 )
 
             is UiElementIdentifier.Id,
-            is UiElementIdentifier.TestTag -> {
+            is UiElementIdentifier.TestTag,
+            -> {
                 device.findObject(UiSelector().resourceId(foundUiElement.resourceId)).text = text
             }
 
             is UiElementIdentifier.Text,
             is UiElementIdentifier.TextResource,
-            is UiElementIdentifier.TextRegex -> {
+            is UiElementIdentifier.TextRegex,
+            -> {
                 device.findObject(UiSelector().text(foundUiElement.text)).text = text
             }
         }
@@ -63,7 +65,7 @@ internal class InputTextHelper(
         uiElementText: String?,
         uiElementResId: String?,
         device: UiDevice,
-        text: String
+        text: String,
     ) {
         if (inputIndicatorText) {
             if (uiElementText == null) {

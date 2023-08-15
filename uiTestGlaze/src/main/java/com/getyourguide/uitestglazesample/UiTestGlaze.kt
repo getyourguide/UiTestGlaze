@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.seconds
  * ```
  */
 data class UiTestGlaze(
-    private val config: Config = Config()
+    private val config: Config = Config(),
 ) {
     /**
      * Configure UiTestGlaze.
@@ -44,7 +44,7 @@ data class UiTestGlaze(
             if (logEverything) {
                 Log.i("UiTestGlaze", it)
             }
-        }
+        },
     ) {
 
         /**
@@ -93,7 +93,7 @@ data class UiTestGlaze(
         uiElementIdentifier: UiElementIdentifier,
         optional: Boolean = false,
         retryCount: Int = 3,
-        longPress: Boolean = false
+        longPress: Boolean = false,
     ) {
         val hierarchy =
             hierarchySettleHelper.waitTillHierarchySettles(
@@ -101,7 +101,7 @@ data class UiTestGlaze(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement
+                config.timeoutToGetAnUiElement,
             )
         tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, hierarchy, device)
     }
@@ -120,14 +120,14 @@ data class UiTestGlaze(
         yPosition: Int,
         optional: Boolean = false,
         retryCount: Int = 3,
-        longPress: Boolean = false
+        longPress: Boolean = false,
     ) {
         hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement
+            config.timeoutToGetAnUiElement,
         )
         tapHelper.tap(xPosition, yPosition, optional, retryCount, longPress, device)
     }
@@ -143,7 +143,7 @@ data class UiTestGlaze(
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement
+            config.timeoutToGetAnUiElement,
         )
         scrollHelper.scroll(scrollOption, device, config)
     }
@@ -161,14 +161,14 @@ data class UiTestGlaze(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement
+                config.timeoutToGetAnUiElement,
             )
         return assertionHelper.assert(
             assertion,
             optional,
             hierarchy,
             device,
-            config.timeoutToGetAnUiElement
+            config.timeoutToGetAnUiElement,
         )
     }
 
@@ -184,14 +184,14 @@ data class UiTestGlaze(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement
+                config.timeoutToGetAnUiElement,
             )
         return findUiElementHelper.getUiElement(
             uiElementIdentifier,
             hierarchy,
             true,
             device,
-            config.timeoutToGetAnUiElement
+            config.timeoutToGetAnUiElement,
         )
     }
 
@@ -207,7 +207,7 @@ data class UiTestGlaze(
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement
+            config.timeoutToGetAnUiElement,
         )
         inputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
     }
@@ -223,7 +223,7 @@ data class UiTestGlaze(
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement
+            config.timeoutToGetAnUiElement,
         )
         PressKeyHelper.pressKey(pressKey, device)
     }
@@ -240,12 +240,11 @@ data class UiTestGlaze(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement
+                config.timeoutToGetAnUiElement,
             )
         }
         printHierarchyHelper.print(getHierarchyHelper.getHierarchy(device))
     }
-
 }
 
 /**
@@ -281,7 +280,7 @@ sealed class UiElementIdentifier(open val index: Int = 0) {
     data class Text(
         val text: String,
         val ignoreCase: Boolean = false,
-        override val index: Int = 0
+        override val index: Int = 0,
     ) : UiElementIdentifier(index)
 
     /**
@@ -292,7 +291,7 @@ sealed class UiElementIdentifier(open val index: Int = 0) {
      */
     data class TextResource(
         @StringRes val stringResourceId: Int,
-        override val index: Int = 0
+        override val index: Int = 0,
     ) : UiElementIdentifier(index)
 
     /**
@@ -314,7 +313,7 @@ sealed class UiElementIdentifier(open val index: Int = 0) {
     data class ChildFrom(
         val uiElementIdentifierParent: UiElementIdentifier,
         val uiElementIdentifierChild: UiElementIdentifier,
-        val inputIndicatorText: Boolean = true
+        val inputIndicatorText: Boolean = true,
     ) : UiElementIdentifier()
 
     /**
@@ -326,7 +325,7 @@ sealed class UiElementIdentifier(open val index: Int = 0) {
      */
     data class PositionInHierarchy(
         override val index: Int = 0,
-        val inputIndicatorText: Boolean = true
+        val inputIndicatorText: Boolean = true,
     ) : UiElementIdentifier(index)
 }
 
@@ -366,7 +365,7 @@ sealed interface ScrollOption {
      */
     data class VerticalDownToElement(
         val toUiElement: UiElementIdentifier,
-        val inUiElement: UiElementIdentifier
+        val inUiElement: UiElementIdentifier,
     ) : ScrollOption
 
     /**
@@ -377,7 +376,7 @@ sealed interface ScrollOption {
      */
     data class HorizontalRightToElement(
         val toUiElement: UiElementIdentifier,
-        val inUiElement: UiElementIdentifier
+        val inUiElement: UiElementIdentifier,
     ) : ScrollOption
 }
 
@@ -492,5 +491,5 @@ data class UiElement(
     val clickable: Boolean? = null,
     val checked: Boolean? = null,
     val enabled: Boolean? = null,
-    val children: List<UiElement>? = null
+    val children: List<UiElement>? = null,
 )

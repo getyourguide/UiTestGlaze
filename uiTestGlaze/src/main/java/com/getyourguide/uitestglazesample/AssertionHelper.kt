@@ -10,7 +10,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
         optional: Boolean,
         hierarchy: TreeNode,
         uiDevice: UiDevice,
-        timeoutToGetAnUiElement: Duration
+        timeoutToGetAnUiElement: Duration,
     ): Boolean {
         return when (assertion) {
             is Assertion.NotVisible -> {
@@ -19,7 +19,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                     hierarchy,
                     true,
                     uiDevice,
-                    timeoutToGetAnUiElement
+                    timeoutToGetAnUiElement,
                 ) == null
             }
 
@@ -29,7 +29,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                     hierarchy,
                     optional,
                     uiDevice,
-                    timeoutToGetAnUiElement
+                    timeoutToGetAnUiElement,
                 ) != null
             }
 
@@ -39,7 +39,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                     hierarchy,
                     optional,
                     uiDevice,
-                    timeoutToGetAnUiElement
+                    timeoutToGetAnUiElement,
                 )?.checked == true
 
             is Assertion.NotChecked ->
@@ -48,7 +48,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                     hierarchy,
                     optional,
                     uiDevice,
-                    timeoutToGetAnUiElement
+                    timeoutToGetAnUiElement,
                 )?.checked == false
 
             is Assertion.Enabled -> findUiElementHelper.getUiElement(
@@ -56,7 +56,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                 hierarchy,
                 optional,
                 uiDevice,
-                timeoutToGetAnUiElement
+                timeoutToGetAnUiElement,
             )?.enabled == true
 
             is Assertion.NotEnabled -> findUiElementHelper.getUiElement(
@@ -64,7 +64,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                 hierarchy,
                 optional,
                 uiDevice,
-                timeoutToGetAnUiElement
+                timeoutToGetAnUiElement,
             )?.enabled == false
         }
     }

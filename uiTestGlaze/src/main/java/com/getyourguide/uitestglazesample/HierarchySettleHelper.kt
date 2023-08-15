@@ -6,7 +6,7 @@ import kotlin.time.Duration
 internal class HierarchySettleHelper(
     private val getHierarchyHelper: GetHierarchyHelper,
     private val findUiElementHelper: FindUiElementHelper,
-    private val logger: Logger
+    private val logger: Logger,
 ) {
 
     fun waitTillHierarchySettles(
@@ -14,7 +14,7 @@ internal class HierarchySettleHelper(
         device: UiDevice,
         waitTillLoadingViewsGoneTimeout: Duration,
         waitTillHierarchySettlesTimeout: Duration,
-        timeoutToGetAnUiElement: Duration
+        timeoutToGetAnUiElement: Duration,
     ): TreeNode {
         Thread.sleep(200)
         var currentTry = 0
@@ -28,7 +28,7 @@ internal class HierarchySettleHelper(
                         hierarchy,
                         true,
                         device,
-                        timeoutToGetAnUiElement
+                        timeoutToGetAnUiElement,
                     )
                 }.any()
             if (isLoadingViewShown) {
