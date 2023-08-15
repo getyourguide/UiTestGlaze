@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+[1.0.2] - 2023-08-15
+
+Added:
+- Added spotless to the project to format the code
+- Added a workflow to check if the library is still building
+
+Changed:
+- Updated Kotlin to 1.9.0
+- Update gradlew wrapper to 8.2.1
+
 [1.0.1] - 2023-04-21
 
 Changed:
@@ -104,7 +114,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.0.1...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.0.2...HEAD
+[1.0.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.2
 [1.0.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.1
 [1.0.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.0
 [0.11.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/0.11.0
