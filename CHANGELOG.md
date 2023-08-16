@@ -4,7 +4,17 @@
 
 ## [Unreleased]
 
-[1.0.2] - 2023-08-15
+## [1.1.0] - 2023-08-16
+
+Added:
+- Assertion method which accepts a list of assertions
+
+Changed:
+- Assertions don't return a boolean anymore. Instead they will fail when they are not met. They also don't accept a boolean anymore if they are optional or not
+- Config field `timeoutToGetAnUiElement` is removed. An UiElement will be found immediately or the test will fail
+- `inputText()` method now accepts a timeout how long it should wait for the text to appear after input
+
+## [1.0.2] - 2023-08-15
 
 Added:
 - Added spotless to the project to format the code
@@ -14,7 +24,7 @@ Changed:
 - Updated Kotlin to 1.9.0
 - Update gradlew wrapper to 8.2.1
 
-[1.0.1] - 2023-04-21
+## [1.0.1] - 2023-04-21
 
 Changed:
 - `LoadingResource` inside `Config` is now a sealed interface.
@@ -23,7 +33,7 @@ It's now possible to find a loading view with a test tag.
 Added:
 - `tap` function with raw x and y position to tap on a specific position on the screen
 
-[1.0.0] - 2023-04-18
+## [1.0.0] - 2023-04-18
 
 Added:
 - `UiElementIdentifier.PositionInHierarchy` to select an element with the position
@@ -41,17 +51,17 @@ Changed:
 - Rename `UiElement` to `UiElementIdentifier`
 - Rename `FoundUiElement` to `UiElement`
 
-[0.11.0] - 2023-04-05
+## [0.11.0] - 2023-04-05
 
 Fixed:
 - `TreeNode` inside `FoundUiElement` was always null
 
-[0.10.0] - 2023-04-04
+## [0.10.0] - 2023-04-04
 
 Fixed:
 - When using `UiElement.Id` for `input` `UiSelector` was using the wrong `text` method instead of `resourceId` to find an UiElement
 
-[0.9.0] - 2023-03-23
+## [0.9.0] - 2023-03-23
 
 Added:
 - Find UI element with a string resource id `UiElement.TextResource`
@@ -64,29 +74,29 @@ Changed:
 - Rename `caseSensitive` property inside `UiElement.Text` to `ignoreCase`
 - Made the `optional` boolean property inside `assert()` optional
 
-[0.8.0] - 2023-03-20
+## [0.8.0] - 2023-03-20
 
 Added:
 - `find` to get an UiElement
 - Added `text`, `clickable`, `checked` and `enabled` properties to `FoundUiElement`
 
-[0.7.0] - 2023-03-20
+## [0.7.0] - 2023-03-20
 
 Fixed:
 - Input text wasn't entering the text in the correct field when there are multiple input fields with the same id
 
-[0.6.0] - 2023-03-17
+## [0.6.0] - 2023-03-17
 
 Changed:
 - Decrease timeout when checking if hierarchy has settled
 - Use sequence to check if a loading view is shown to only evaluate list till first not null item is found
 
-[0.5.0] - 2023-03-17
+## [0.5.0] - 2023-03-17
 
 Fixed:
 - Repeat block when getting an UI element was not break out early
 
-[0.4.0] - 2023-03-17
+## [0.4.0] - 2023-03-17
 
 Fixed:
 - When loading view was detekt we entered an endless loop
@@ -114,7 +124,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.0.2...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.0
 [1.0.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.2
 [1.0.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.1
 [1.0.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.0

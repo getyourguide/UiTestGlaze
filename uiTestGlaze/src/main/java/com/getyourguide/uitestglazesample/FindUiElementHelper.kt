@@ -23,6 +23,7 @@ package com.getyourguide.uitestglazesample
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 internal class FindUiElementHelper(
     private val logger: Logger,
@@ -34,7 +35,7 @@ internal class FindUiElementHelper(
         hierarchy: TreeNode,
         optional: Boolean,
         device: UiDevice,
-        timeoutToGetAnUiElement: Duration,
+        timeoutToGetAnUiElement: Duration = 0.seconds,
     ): UiElement? {
         var newHierarchy = hierarchy
         var uiElement: UiElement?
@@ -77,19 +78,19 @@ internal class FindUiElementHelper(
                     newHierarchy,
                 )?.first
             }
-            if (uiElement != null || optional) {
+            if (uiElement != null) {
                 logger.i("FindUiElementHelper getUiElement $uiElementIdentifier found return: $uiElement")
                 break
             }
             logger.i("FindUiElementHelper getUiElement $uiElementIdentifier not found so try again")
+            logger.i("Run time: ${System.currentTimeMillis() - startTime}")
+            logger.i("TImeout: ${timeoutToGetAnUiElement.inWholeMilliseconds}")
             Thread.sleep(200)
             newHierarchy = getHierarchyHelper.getHierarchy(device)
         } while ((System.currentTimeMillis() - startTime) < timeoutToGetAnUiElement.inWholeMilliseconds)
 
-        if (uiElement == null) {
-            if (!optional) {
-                throw IllegalStateException("Couldn't find uiElement: $uiElementIdentifier")
-            }
+        if (uiElement == null && !optional) {
+            throw IllegalStateException("Couldn't find uiElement: $uiElementIdentifier")
         }
         return uiElement
     }

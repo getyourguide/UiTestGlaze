@@ -23,7 +23,6 @@ internal class TapHelper(
                 hierarchy,
                 optional,
                 device,
-                config.timeoutToGetAnUiElement,
             ) ?: return
         tapOnTreeNode(foundUiElement, optional, retryCount, longPress, device)
     }
@@ -78,11 +77,10 @@ internal class TapHelper(
 
         val hierarchyAfterTap =
             hierarchySettleHelper.waitTillHierarchySettles(
-                config.loadingResourceIds,
+                emptyList(),
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement,
             )
 
         return hierarchyAfterTap != hierarchyBeforeTap

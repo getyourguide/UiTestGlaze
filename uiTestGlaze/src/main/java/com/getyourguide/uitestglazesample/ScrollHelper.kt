@@ -1,7 +1,7 @@
 package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 internal class ScrollHelper(
     private val findUiElementHelper: FindUiElementHelper,
@@ -28,12 +28,11 @@ internal class ScrollHelper(
                 scrollHorizontalRight(
                     device,
                     scrollOption.inUiElement,
-                    config.timeoutToGetAnUiElement,
                 )
             }
 
             is ScrollOption.VerticalDown -> {
-                scrollVerticalDown(device, scrollOption.inUiElement, config.timeoutToGetAnUiElement)
+                scrollVerticalDown(device, scrollOption.inUiElement)
             }
 
             is ScrollOption.HorizontalRightToElement -> scrollHorizontalRightToElement(
@@ -52,21 +51,19 @@ internal class ScrollHelper(
         device: UiDevice,
     ) {
         scroll(config, device, inUiElement, toUiElement) {
-            scrollHorizontalRight(device, inUiElement, config.timeoutToGetAnUiElement)
+            scrollHorizontalRight(device, inUiElement)
         }
     }
 
     private fun scrollVerticalDown(
         device: UiDevice,
         inUiElement: UiElementIdentifier,
-        timeoutToGetAnUiElement: Duration,
     ) {
         val foundInUIElement = findUiElementHelper.getUiElement(
             inUiElement,
             getHierarchyHelper.getHierarchy(device),
             true,
             device,
-            timeoutToGetAnUiElement,
         ) ?: throw IllegalStateException("Could not find element to scroll in")
         val startAndEndXPosition = foundInUIElement.x + foundInUIElement.width / 2
         val startYPosition = foundInUIElement.y + foundInUIElement.height * 0.7
@@ -77,14 +74,12 @@ internal class ScrollHelper(
     private fun scrollHorizontalRight(
         device: UiDevice,
         inUiElement: UiElementIdentifier,
-        timeoutToGetAnUiElement: Duration,
     ) {
         val foundInUIElement = findUiElementHelper.getUiElement(
             inUiElement,
             getHierarchyHelper.getHierarchy(device),
             true,
             device,
-            timeoutToGetAnUiElement,
         ) ?: throw IllegalStateException("Could not find element to scroll in")
         val startAndEndYPosition = foundInUIElement.y + foundInUIElement.height / 2
         val startXPosition = foundInUIElement.x + foundInUIElement.width * 0.7
@@ -119,7 +114,7 @@ internal class ScrollHelper(
         device: UiDevice,
     ) {
         scroll(config, device, inUiElement, toUiElement) {
-            scrollVerticalDown(device, inUiElement, config.timeoutToGetAnUiElement)
+            scrollVerticalDown(device, inUiElement)
         }
     }
 
@@ -136,7 +131,6 @@ internal class ScrollHelper(
             hierarchy,
             true,
             device,
-            config.timeoutToGetAnUiElement,
         )
             ?: throw IllegalStateException("Could not find element to scroll in")
 
@@ -145,7 +139,6 @@ internal class ScrollHelper(
             hierarchy,
             true,
             device,
-            config.timeoutToGetAnUiElement,
         )
         if (uiElement == null || uiElement.height == 0) {
             var toFindUiElement: UiElement? = null
@@ -157,19 +150,18 @@ internal class ScrollHelper(
                     device,
                     config.waitTillLoadingViewsGoneTimeout,
                     config.waitTillHierarchySettlesTimeout,
-                    config.timeoutToGetAnUiElement,
                 )
-                if (hierarchyBeforeScroll == getHierarchyHelper.getHierarchy(device)) {
+                val hierarchyAfterScroll = getHierarchyHelper.getHierarchy(device)
+                if (hierarchyBeforeScroll == hierarchyAfterScroll) {
                     throw IllegalStateException("Could not find element to scroll to")
                 }
-                toFindUiElement =
-                    findUiElementHelper.getUiElement(
-                        toUiElement,
-                        getHierarchyHelper.getHierarchy(device),
-                        true,
-                        device,
-                        config.timeoutToGetAnUiElement,
-                    )
+                toFindUiElement = findUiElementHelper.getUiElement(
+                    toUiElement,
+                    hierarchyAfterScroll,
+                    true,
+                    device,
+                    3.seconds,
+                )
             }
         }
     }

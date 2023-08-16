@@ -15,7 +15,7 @@ class VerticalListTest {
         with(UiTestGlaze()) {
             tap(UiElementIdentifier.Text("List", true))
             scroll(ScrollOption.VerticalDown(UiElementIdentifier.Id(R.id.list)))
-            assert(Assertion.Visible(UiElementIdentifier.Text("17")), false)
+            assert(Assertion.Visible(UiElementIdentifier.Text("17")))
         }
     }
 
@@ -30,7 +30,7 @@ class VerticalListTest {
                     inUiElement = UiElementIdentifier.Id(R.id.list)
                 )
             )
-            assert(Assertion.Visible(UiElementIdentifier.Text("42")), false)
+            assert(Assertion.Visible(UiElementIdentifier.Text("42")))
         }
     }
 }
