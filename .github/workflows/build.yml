@@ -14,7 +14,7 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx6g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
 
 jobs:
-  assembe-library:
+  assemble-library:
 
     runs-on: ubuntu-latest
 
