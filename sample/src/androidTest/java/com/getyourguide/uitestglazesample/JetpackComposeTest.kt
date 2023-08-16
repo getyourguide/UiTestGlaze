@@ -12,13 +12,13 @@ class JetpackComposeTest {
     @Test
     fun testJetpackCompose() {
         testRule.launchActivity(null)
-        with(UiTestGlaze()) {
+        with(UiTestGlaze(config = UiTestGlaze.Config(logEverything = true))) {
             tap(UiElementIdentifier.Text("Jetpack Compose", true))
-            assert(Assertion.Visible(UiElementIdentifier.Text("Hello World", true)), false)
-            assert(Assertion.Visible(UiElementIdentifier.TestTag("hello_world_tag")), false)
+            assert(Assertion.Visible(UiElementIdentifier.Text("Hello World", true)))
+            assert(Assertion.Visible(UiElementIdentifier.TestTag("hello_world_tag")))
 
             inputText("UiTestGlaze rocks!", UiElementIdentifier.TestTag("text_field_tag"))
-            assert(Assertion.Visible(UiElementIdentifier.Text("UiTestGlaze rocks!")), false)
+            assert(Assertion.Visible(UiElementIdentifier.Text("UiTestGlaze rocks!")))
         }
     }
 }

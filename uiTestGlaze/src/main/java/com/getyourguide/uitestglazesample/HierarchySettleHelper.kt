@@ -14,10 +14,8 @@ internal class HierarchySettleHelper(
         device: UiDevice,
         waitTillLoadingViewsGoneTimeout: Duration,
         waitTillHierarchySettlesTimeout: Duration,
-        timeoutToGetAnUiElement: Duration,
     ): TreeNode {
         Thread.sleep(200)
-        var currentTry = 0
         var hierarchy: TreeNode = getHierarchyHelper.getHierarchy(device)
         val startTimeLoadingViews = System.currentTimeMillis()
         do {
@@ -28,12 +26,10 @@ internal class HierarchySettleHelper(
                         hierarchy,
                         true,
                         device,
-                        timeoutToGetAnUiElement,
                     )
                 }.any()
             if (isLoadingViewShown) {
                 logger.i("waitTillHierarchySettles loading view is shown")
-                currentTry++
                 Thread.sleep(200)
                 hierarchy = getHierarchyHelper.getHierarchy(device)
             }

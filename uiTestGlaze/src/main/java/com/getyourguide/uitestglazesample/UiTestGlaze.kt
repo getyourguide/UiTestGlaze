@@ -31,7 +31,6 @@ data class UiTestGlaze(
      * @property loadingResourceIds List of resource ids of views that are considered as loading views. UiTestGlaze will wait till these views are gone.
      * @property waitTillLoadingViewsGoneTimeout Timeout to wait till loading views are gone.
      * @property waitTillHierarchySettlesTimeout Timeout to wait till hierarchy settles.
-     * @property timeoutToGetAnUiElement Timeout to wait till UiElement is found.
      * @property logger Customer way to log messages.
      */
     data class Config(
@@ -39,7 +38,6 @@ data class UiTestGlaze(
         val loadingResourceIds: List<LoadingResource> = emptyList(),
         val waitTillLoadingViewsGoneTimeout: Duration = 30.seconds,
         val waitTillHierarchySettlesTimeout: Duration = 30.seconds,
-        val timeoutToGetAnUiElement: Duration = 10.seconds,
         val logger: (String) -> Unit = {
             if (logEverything) {
                 Log.i("UiTestGlaze", it)
@@ -74,7 +72,8 @@ data class UiTestGlaze(
     private val assertionHelper = AssertionHelper(findUiElementHelper)
     private val hierarchySettleHelper =
         HierarchySettleHelper(getHierarchyHelper, findUiElementHelper, logger)
-    private val inputTextHelper = InputTextHelper(getHierarchyHelper, findUiElementHelper)
+    private val inputTextHelper =
+        InputTextHelper(getHierarchyHelper, findUiElementHelper, hierarchySettleHelper, config)
     private val printHierarchyHelper = PrintHierarchyHelper(logger)
     private val scrollHelper =
         ScrollHelper(findUiElementHelper, getHierarchyHelper, hierarchySettleHelper)
@@ -101,7 +100,6 @@ data class UiTestGlaze(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement,
             )
         tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, hierarchy, device)
     }
@@ -127,7 +125,6 @@ data class UiTestGlaze(
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement,
         )
         tapHelper.tap(xPosition, yPosition, optional, retryCount, longPress, device)
     }
@@ -143,7 +140,6 @@ data class UiTestGlaze(
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement,
         )
         scrollHelper.scroll(scrollOption, device, config)
     }
@@ -152,24 +148,42 @@ data class UiTestGlaze(
      * Assert an assertion.
      *
      * @param assertion Assertion to assert.
-     * @param optional If true, UiTestGlaze will not throw an exception if the assertion fails.
      */
-    fun assert(assertion: Assertion, optional: Boolean = false): Boolean {
+    fun assert(assertion: Assertion) {
         val hierarchy =
             hierarchySettleHelper.waitTillHierarchySettles(
                 config.loadingResourceIds,
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement,
             )
-        return assertionHelper.assert(
+        assertionHelper.assert(
             assertion,
-            optional,
             hierarchy,
             device,
-            config.timeoutToGetAnUiElement,
         )
+    }
+
+    /**
+     * Make multiple assertions.
+     *
+     * @param assertions Block of assertions.
+     */
+    fun assert(assertions: List<Assertion>) {
+        val hierarchy =
+            hierarchySettleHelper.waitTillHierarchySettles(
+                config.loadingResourceIds,
+                device,
+                config.waitTillLoadingViewsGoneTimeout,
+                config.waitTillHierarchySettlesTimeout,
+            )
+        assertions.asSequence().forEach {
+            assertionHelper.assert(
+                it,
+                hierarchy,
+                device,
+            )
+        }
     }
 
     /**
@@ -184,14 +198,12 @@ data class UiTestGlaze(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement,
             )
         return findUiElementHelper.getUiElement(
             uiElementIdentifier,
             hierarchy,
             true,
             device,
-            config.timeoutToGetAnUiElement,
         )
     }
 
@@ -200,16 +212,25 @@ data class UiTestGlaze(
      *
      * @param text Text to input.
      * @param uiElementIdentifier Identifier of the element to input text.
+     * @param inputShouldBeRecognizedTimeout Timeout to wait till the input is recognized.
      */
-    fun inputText(text: String, uiElementIdentifier: UiElementIdentifier) {
+    fun inputText(
+        text: String,
+        uiElementIdentifier: UiElementIdentifier,
+        inputShouldBeRecognizedTimeout: Duration = 3.seconds,
+    ) {
         hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement,
         )
-        inputTextHelper.inputText(text, uiElementIdentifier, device, config.timeoutToGetAnUiElement)
+        inputTextHelper.inputText(
+            text = text,
+            uiElementIdentifier = uiElementIdentifier,
+            device = device,
+            inputShouldBeRecognizedTimeout = inputShouldBeRecognizedTimeout,
+        )
     }
 
     /**
@@ -223,7 +244,6 @@ data class UiTestGlaze(
             device,
             config.waitTillLoadingViewsGoneTimeout,
             config.waitTillHierarchySettlesTimeout,
-            config.timeoutToGetAnUiElement,
         )
         PressKeyHelper.pressKey(pressKey, device)
     }
@@ -240,7 +260,6 @@ data class UiTestGlaze(
                 device,
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
-                config.timeoutToGetAnUiElement,
             )
         }
         printHierarchyHelper.print(getHierarchyHelper.getHierarchy(device))

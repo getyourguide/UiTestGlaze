@@ -7,13 +7,15 @@ import kotlin.time.Duration
 internal class InputTextHelper(
     private val getHierarchyHelper: GetHierarchyHelper,
     private val findUiElementHelper: FindUiElementHelper,
+    private val hierarchySettleHelper: HierarchySettleHelper,
+    private val config: UiTestGlaze.Config,
 ) {
 
     fun inputText(
         text: String,
         uiElementIdentifier: UiElementIdentifier,
         device: UiDevice,
-        timeoutToGetAnUiElement: Duration,
+        inputShouldBeRecognizedTimeout: Duration,
     ) {
         val hierarchy = getHierarchyHelper.getHierarchy(device)
         val foundUiElement =
@@ -22,7 +24,6 @@ internal class InputTextHelper(
                 hierarchy,
                 false,
                 device,
-                timeoutToGetAnUiElement,
             )
                 ?: throw IllegalStateException("Can not find UiElement to enter text")
 
@@ -57,6 +58,23 @@ internal class InputTextHelper(
             -> {
                 device.findObject(UiSelector().text(foundUiElement.text)).text = text
             }
+        }
+        val startTime = System.currentTimeMillis()
+        var hierarchyChanged = false
+        do {
+            val hierarchyAfterEnteringText = hierarchySettleHelper.waitTillHierarchySettles(
+                emptyList(),
+                device,
+                config.waitTillLoadingViewsGoneTimeout,
+                config.waitTillHierarchySettlesTimeout,
+            )
+            if (hierarchy != hierarchyAfterEnteringText) {
+                hierarchyChanged = true
+                break
+            }
+        } while ((System.currentTimeMillis() - startTime) < inputShouldBeRecognizedTimeout.inWholeMilliseconds)
+        if (!hierarchyChanged) {
+            throw IllegalStateException("Timeout hit while waiting for hierarchy to settle")
         }
     }
 

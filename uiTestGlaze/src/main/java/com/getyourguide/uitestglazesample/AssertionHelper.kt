@@ -1,71 +1,80 @@
 package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
-import kotlin.time.Duration
 
 internal class AssertionHelper(private val findUiElementHelper: FindUiElementHelper) {
 
     fun assert(
         assertion: Assertion,
-        optional: Boolean,
         hierarchy: TreeNode,
         uiDevice: UiDevice,
-        timeoutToGetAnUiElement: Duration,
-    ): Boolean {
-        return when (assertion) {
+    ) {
+        when (assertion) {
             is Assertion.NotVisible -> {
-                findUiElementHelper.getUiElement(
-                    assertion.uiElementIdentifier,
-                    hierarchy,
-                    true,
-                    uiDevice,
-                    timeoutToGetAnUiElement,
-                ) == null
+                if (findUiElementHelper.getUiElement(
+                        uiElementIdentifier = assertion.uiElementIdentifier,
+                        hierarchy = hierarchy,
+                        optional = true,
+                        device = uiDevice,
+                    ) != null
+                ) {
+                    throw IllegalStateException("Assertion: $assertion failed. UiElement is visible")
+                }
             }
 
             is Assertion.Visible -> {
-                findUiElementHelper.getUiElement(
-                    assertion.uiElementIdentifier,
-                    hierarchy,
-                    optional,
-                    uiDevice,
-                    timeoutToGetAnUiElement,
-                ) != null
+                if (findUiElementHelper.getUiElement(
+                        uiElementIdentifier = assertion.uiElementIdentifier,
+                        hierarchy = hierarchy,
+                        optional = true,
+                        device = uiDevice,
+                    ) == null
+                ) {
+                    throw IllegalStateException("Assertion: $assertion failed. UiElement is not visible")
+                }
             }
 
             is Assertion.Checked ->
-                findUiElementHelper.getUiElement(
-                    assertion.uiElementIdentifier,
-                    hierarchy,
-                    optional,
-                    uiDevice,
-                    timeoutToGetAnUiElement,
-                )?.checked == true
+                if (findUiElementHelper.getUiElement(
+                        uiElementIdentifier = assertion.uiElementIdentifier,
+                        hierarchy = hierarchy,
+                        optional = true,
+                        device = uiDevice,
+                    )?.checked != true
+                ) {
+                    throw IllegalStateException("Assertion: $assertion failed. UiElement is not checked")
+                }
 
             is Assertion.NotChecked ->
-                findUiElementHelper.getUiElement(
-                    assertion.uiElementIdentifier,
-                    hierarchy,
-                    optional,
-                    uiDevice,
-                    timeoutToGetAnUiElement,
-                )?.checked == false
+                if (findUiElementHelper.getUiElement(
+                        uiElementIdentifier = assertion.uiElementIdentifier,
+                        hierarchy = hierarchy,
+                        optional = true,
+                        device = uiDevice,
+                    )?.checked != false
+                ) {
+                    throw IllegalStateException("Assertion: $assertion failed. UiElement is checked")
+                }
 
-            is Assertion.Enabled -> findUiElementHelper.getUiElement(
-                assertion.uiElementIdentifier,
-                hierarchy,
-                optional,
-                uiDevice,
-                timeoutToGetAnUiElement,
-            )?.enabled == true
+            is Assertion.Enabled -> if (findUiElementHelper.getUiElement(
+                    uiElementIdentifier = assertion.uiElementIdentifier,
+                    hierarchy = hierarchy,
+                    optional = true,
+                    device = uiDevice,
+                )?.enabled != true
+            ) {
+                throw IllegalStateException("Assertion: $assertion failed. UiElement is not enabled")
+            }
 
-            is Assertion.NotEnabled -> findUiElementHelper.getUiElement(
-                assertion.uiElementIdentifier,
-                hierarchy,
-                optional,
-                uiDevice,
-                timeoutToGetAnUiElement,
-            )?.enabled == false
+            is Assertion.NotEnabled -> if (findUiElementHelper.getUiElement(
+                    uiElementIdentifier = assertion.uiElementIdentifier,
+                    hierarchy = hierarchy,
+                    optional = true,
+                    device = uiDevice,
+                )?.enabled != false
+            ) {
+                throw IllegalStateException("Assertion: $assertion failed. UiElement is enabled")
+            }
         }
     }
 }
