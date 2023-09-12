@@ -1,8 +1,13 @@
 package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
+import kotlin.time.Duration.Companion.seconds
 
 internal class AssertionHelper(private val findUiElementHelper: FindUiElementHelper) {
+
+    companion object {
+        private val TIMEOUT_TO_FIND_ELEMENT = 3.seconds
+    }
 
     fun assert(
         assertion: Assertion,
@@ -16,6 +21,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                         hierarchy = hierarchy,
                         optional = true,
                         device = uiDevice,
+                        timeoutToGetAnUiElement = TIMEOUT_TO_FIND_ELEMENT,
                     ) != null
                 ) {
                     throw IllegalStateException("Assertion: $assertion failed. UiElement is visible")
@@ -28,6 +34,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                         hierarchy = hierarchy,
                         optional = true,
                         device = uiDevice,
+                        timeoutToGetAnUiElement = TIMEOUT_TO_FIND_ELEMENT,
                     ) == null
                 ) {
                     throw IllegalStateException("Assertion: $assertion failed. UiElement is not visible")
@@ -40,6 +47,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                         hierarchy = hierarchy,
                         optional = true,
                         device = uiDevice,
+                        timeoutToGetAnUiElement = TIMEOUT_TO_FIND_ELEMENT,
                     )?.checked != true
                 ) {
                     throw IllegalStateException("Assertion: $assertion failed. UiElement is not checked")
@@ -51,6 +59,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                         hierarchy = hierarchy,
                         optional = true,
                         device = uiDevice,
+                        timeoutToGetAnUiElement = TIMEOUT_TO_FIND_ELEMENT,
                     )?.checked != false
                 ) {
                     throw IllegalStateException("Assertion: $assertion failed. UiElement is checked")
@@ -61,6 +70,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                     hierarchy = hierarchy,
                     optional = true,
                     device = uiDevice,
+                    timeoutToGetAnUiElement = TIMEOUT_TO_FIND_ELEMENT,
                 )?.enabled != true
             ) {
                 throw IllegalStateException("Assertion: $assertion failed. UiElement is not enabled")
@@ -71,6 +81,7 @@ internal class AssertionHelper(private val findUiElementHelper: FindUiElementHel
                     hierarchy = hierarchy,
                     optional = true,
                     device = uiDevice,
+                    timeoutToGetAnUiElement = TIMEOUT_TO_FIND_ELEMENT,
                 )?.enabled != false
             ) {
                 throw IllegalStateException("Assertion: $assertion failed. UiElement is enabled")
