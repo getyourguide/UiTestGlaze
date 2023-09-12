@@ -93,6 +93,8 @@ data class UiTestGlaze(
         optional: Boolean = false,
         retryCount: Int = 3,
         longPress: Boolean = false,
+        offsetX: Int = 0,
+        offsetY: Int = 0,
     ) {
         val hierarchy =
             hierarchySettleHelper.waitTillHierarchySettles(
@@ -101,7 +103,7 @@ data class UiTestGlaze(
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
             )
-        tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, hierarchy, device)
+        tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, offsetX, offsetY, hierarchy, device)
     }
 
     /**
