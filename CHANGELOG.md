@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+# [1.1.1] - 2023-09-12
+
+Added:
+- Tap can now have an offset
+
+Changed:
+- Assertions now have a default timeout of 3 seconds to find an UI element
+
 ## [1.1.0] - 2023-08-16
 
 Added:
@@ -124,7 +132,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.0...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.1...HEAD
+[1.1.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.1
 [1.1.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.0
 [1.0.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.2
 [1.0.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.0.1
