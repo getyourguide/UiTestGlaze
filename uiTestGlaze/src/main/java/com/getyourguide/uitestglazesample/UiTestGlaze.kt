@@ -103,7 +103,7 @@ data class UiTestGlaze(
                 config.waitTillLoadingViewsGoneTimeout,
                 config.waitTillHierarchySettlesTimeout,
             )
-        tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, offsetX, offsetY hierarchy, device)
+        tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, offsetX, offsetY, hierarchy, device)
     }
 
     /**
