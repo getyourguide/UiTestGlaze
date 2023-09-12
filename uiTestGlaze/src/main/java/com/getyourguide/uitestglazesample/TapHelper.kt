@@ -14,6 +14,8 @@ internal class TapHelper(
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
+        offsetX: Float,
+        offsetY: Float,
         hierarchy: TreeNode,
         device: UiDevice,
     ) {
@@ -24,7 +26,7 @@ internal class TapHelper(
                 optional,
                 device,
             ) ?: return
-        tapOnTreeNode(foundUiElement, optional, retryCount, longPress, device)
+        tapOnTreeNode(foundUiElement, optional, retryCount, longPress, offsetX, offsetY, device)
     }
 
     private fun tapOnTreeNode(
@@ -32,11 +34,13 @@ internal class TapHelper(
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
+        offsetX: Float,
+        offsetY: Float,
         device: UiDevice,
     ) {
         tap(
-            uiElement.x + (uiElement.width) / 2,
-            uiElement.y + (uiElement.height) / 2,
+            uiElement.x + (uiElement.width) / 2 + offsetX,
+            uiElement.y + (uiElement.height) / 2 + offsetY,
             optional,
             retryCount,
             longPress,
