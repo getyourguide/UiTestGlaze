@@ -14,8 +14,8 @@ internal class TapHelper(
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
-        offsetX: Float,
-        offsetY: Float,
+        offsetX: Int,
+        offsetY: Int,
         hierarchy: TreeNode,
         device: UiDevice,
     ) {
@@ -34,8 +34,8 @@ internal class TapHelper(
         optional: Boolean,
         retryCount: Int,
         longPress: Boolean,
-        offsetX: Float,
-        offsetY: Float,
+        offsetX: Int,
+        offsetY: Int,
         device: UiDevice,
     ) {
         tap(

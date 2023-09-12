@@ -93,8 +93,8 @@ data class UiTestGlaze(
         optional: Boolean = false,
         retryCount: Int = 3,
         longPress: Boolean = false,
-        offsetX: Float = 0F,
-        offsetY: Float = 0F,
+        offsetX: Int = 0,
+        offsetY: Int = 0,
     ) {
         val hierarchy =
             hierarchySettleHelper.waitTillHierarchySettles(
