@@ -145,14 +145,21 @@ internal class ScrollHelper(
             while (toFindUiElement == null || toFindUiElement.height == 0) {
                 val hierarchyBeforeScroll = getHierarchyHelper.getHierarchy(device)
                 scrollDirection()
-                hierarchySettleHelper.waitTillHierarchySettles(
-                    emptyList(),
-                    device,
-                    config.waitTillLoadingViewsGoneTimeout,
-                    config.waitTillHierarchySettlesTimeout,
+                val startTime = System.currentTimeMillis()
+                var hierarchyAfterScroll: TreeNode?
+                do {
+                    hierarchySettleHelper.waitTillHierarchySettles(
+                        emptyList(),
+                        device,
+                        config.waitTillLoadingViewsGoneTimeout,
+                        config.waitTillHierarchySettlesTimeout,
+                    )
+                    hierarchyAfterScroll = getHierarchyHelper.getHierarchy(device)
+
+                } while (hierarchyBeforeScroll == hierarchyAfterScroll &&
+                    (System.currentTimeMillis() - startTime) < 3.seconds.inWholeMilliseconds
                 )
-                val hierarchyAfterScroll = getHierarchyHelper.getHierarchy(device)
-                if (hierarchyBeforeScroll == hierarchyAfterScroll) {
+                if (hierarchyBeforeScroll == hierarchyAfterScroll || hierarchyAfterScroll == null) {
                     throw IllegalStateException("Could not find element to scroll to")
                 }
                 toFindUiElement = findUiElementHelper.getUiElement(
