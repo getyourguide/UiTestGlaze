@@ -366,6 +366,13 @@ sealed interface ScrollOption {
      *
      * @param inUiElement UiElement to scroll in.
      */
+    data class VerticalUp(val inUiElement: UiElementIdentifier) : ScrollOption
+
+    /**
+     * Scroll vertical up.
+     *
+     * @param inUiElement UiElement to scroll in.
+     */
     data class HorizontalRight(val inUiElement: UiElementIdentifier) : ScrollOption
 
     /**
@@ -385,6 +392,17 @@ sealed interface ScrollOption {
      * @param inUiElement UiElement to scroll in.
      */
     data class VerticalDownToElement(
+        val toUiElement: UiElementIdentifier,
+        val inUiElement: UiElementIdentifier,
+    ) : ScrollOption
+
+    /**
+     * Scroll vertical up to a given UiElement.
+     *
+     * @param toUiElement UiElement to scroll to.
+     * @param inUiElement UiElement to scroll in.
+     */
+    data class VerticalUpToElement(
         val toUiElement: UiElementIdentifier,
         val inUiElement: UiElementIdentifier,
     ) : ScrollOption

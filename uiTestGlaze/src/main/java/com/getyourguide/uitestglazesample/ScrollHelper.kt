@@ -24,6 +24,15 @@ internal class ScrollHelper(
                 )
             }
 
+            is ScrollOption.VerticalUpToElement -> {
+                scrollVerticalUpToElement(
+                    config,
+                    scrollOption.toUiElement,
+                    scrollOption.inUiElement,
+                    device,
+                )
+            }
+
             is ScrollOption.HorizontalRight -> {
                 scrollHorizontalRight(
                     device,
@@ -33,6 +42,10 @@ internal class ScrollHelper(
 
             is ScrollOption.VerticalDown -> {
                 scrollVerticalDown(device, scrollOption.inUiElement)
+            }
+
+            is ScrollOption.VerticalUp -> {
+                scrollVerticalUp(device, scrollOption.inUiElement)
             }
 
             is ScrollOption.HorizontalRightToElement -> scrollHorizontalRightToElement(
@@ -68,6 +81,22 @@ internal class ScrollHelper(
         val startAndEndXPosition = foundInUIElement.x + foundInUIElement.width / 2
         val startYPosition = foundInUIElement.y + foundInUIElement.height * 0.7
         val endYPosition = foundInUIElement.y + foundInUIElement.height * 0.3
+        device.executeShellCommand("input swipe $startAndEndXPosition $startYPosition $startAndEndXPosition $endYPosition")
+    }
+
+    private fun scrollVerticalUp(
+        device: UiDevice,
+        inUiElement: UiElementIdentifier,
+    ) {
+        val foundInUIElement = findUiElementHelper.getUiElement(
+            inUiElement,
+            getHierarchyHelper.getHierarchy(device),
+            true,
+            device,
+        ) ?: throw IllegalStateException("Could not find element to scroll in")
+        val startAndEndXPosition = foundInUIElement.x + foundInUIElement.width / 2
+        val startYPosition = foundInUIElement.y + foundInUIElement.height * 0.3
+        val endYPosition = foundInUIElement.y + foundInUIElement.height * 0.7
         device.executeShellCommand("input swipe $startAndEndXPosition $startYPosition $startAndEndXPosition $endYPosition")
     }
 
@@ -115,6 +144,17 @@ internal class ScrollHelper(
     ) {
         scroll(config, device, inUiElement, toUiElement) {
             scrollVerticalDown(device, inUiElement)
+        }
+    }
+
+    private fun scrollVerticalUpToElement(
+        config: UiTestGlaze.Config,
+        toUiElement: UiElementIdentifier,
+        inUiElement: UiElementIdentifier,
+        device: UiDevice,
+    ) {
+        scroll(config, device, inUiElement, toUiElement) {
+            scrollVerticalUp(device, inUiElement)
         }
     }
 

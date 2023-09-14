@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+# [1.1.3] - 2023-09-14
+
+Added:
+- Option to scroll vertical up to an element `ScrollOption.VerticalUpToElement`
+- Option to scroll vertical up `ScrollOption.VerticalUp`
+
 # [1.1.2] - 2023-09-13
 
 Changed:
@@ -137,7 +143,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.2...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.3...HEAD
+[1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.3
 [1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.2
 [1.1.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.1
 [1.1.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.0
