@@ -73,7 +73,7 @@ data class UiTestGlaze(
     private val hierarchySettleHelper =
         HierarchySettleHelper(getHierarchyHelper, findUiElementHelper, logger)
     private val inputTextHelper =
-        InputTextHelper(getHierarchyHelper, findUiElementHelper, hierarchySettleHelper, config)
+        InputTextHelper(getHierarchyHelper, findUiElementHelper)
     private val printHierarchyHelper = PrintHierarchyHelper(logger)
     private val scrollHelper =
         ScrollHelper(findUiElementHelper, getHierarchyHelper, hierarchySettleHelper)

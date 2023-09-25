@@ -7,8 +7,6 @@ import kotlin.time.Duration
 internal class InputTextHelper(
     private val getHierarchyHelper: GetHierarchyHelper,
     private val findUiElementHelper: FindUiElementHelper,
-    private val hierarchySettleHelper: HierarchySettleHelper,
-    private val config: UiTestGlaze.Config,
 ) {
 
     fun inputText(
@@ -49,25 +47,25 @@ internal class InputTextHelper(
             is UiElementIdentifier.Id,
             is UiElementIdentifier.TestTag,
             -> {
-                device.findObject(UiSelector().resourceId(foundUiElement.resourceId)).text = text
+                device.findObject(
+                    UiSelector().resourceId(foundUiElement.resourceId)
+                        .instance(uiElementIdentifier.index)
+                ).text = text
             }
 
             is UiElementIdentifier.Text,
             is UiElementIdentifier.TextResource,
             is UiElementIdentifier.TextRegex,
             -> {
-                device.findObject(UiSelector().text(foundUiElement.text)).text = text
+                device.findObject(
+                    UiSelector().text(foundUiElement.text).instance(uiElementIdentifier.index)
+                ).text = text
             }
         }
         val startTime = System.currentTimeMillis()
         var hierarchyChanged = false
         do {
-            val hierarchyAfterEnteringText = hierarchySettleHelper.waitTillHierarchySettles(
-                emptyList(),
-                device,
-                config.waitTillLoadingViewsGoneTimeout,
-                config.waitTillHierarchySettlesTimeout,
-            )
+            val hierarchyAfterEnteringText = getHierarchyHelper.getHierarchy(device)
             if (hierarchy != hierarchyAfterEnteringText) {
                 hierarchyChanged = true
                 break

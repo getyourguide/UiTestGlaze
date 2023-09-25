@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+#[1.1.4] - 2023-09-25
+
+Fixed:
+- When entering text with an `UiElementIdentifier` with index. Index was not used.
+
 # [1.1.3] - 2023-09-14
 
 Added:
@@ -143,7 +148,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.3...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.4...HEAD
+[1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.4
 [1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.3
 [1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.2
 [1.1.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.1
