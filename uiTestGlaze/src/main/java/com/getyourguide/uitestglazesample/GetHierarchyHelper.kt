@@ -33,7 +33,7 @@ enum class Attribute {
     BOUNDS,
     CHECKED,
     ENABLED,
-    CLASS
+    CLASS,
 }
 
 internal class GetHierarchyHelper(private val logger: Logger) {

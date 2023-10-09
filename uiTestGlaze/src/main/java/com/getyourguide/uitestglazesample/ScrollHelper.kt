@@ -195,7 +195,6 @@ internal class ScrollHelper(
                         config.waitTillHierarchySettlesTimeout,
                     )
                     hierarchyAfterScroll = getHierarchyHelper.getHierarchy(device)
-
                 } while (hierarchyBeforeScroll == hierarchyAfterScroll &&
                     (System.currentTimeMillis() - startTime) < 3.seconds.inWholeMilliseconds
                 )
