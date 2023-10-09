@@ -33,6 +33,7 @@ enum class Attribute {
     BOUNDS,
     CHECKED,
     ENABLED,
+    CLASS
 }
 
 internal class GetHierarchyHelper(private val logger: Logger) {
@@ -137,6 +138,10 @@ internal class GetHierarchyHelper(private val logger: Logger) {
 
             if (node.hasAttribute("enabled")) {
                 attributesBuilder[Attribute.ENABLED] = node.getAttribute("enabled")
+            }
+
+            if (node.hasAttribute("class")) {
+                attributesBuilder[Attribute.CLASS] = node.getAttribute("class")
             }
 
             attributesBuilder
