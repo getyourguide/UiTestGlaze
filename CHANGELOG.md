@@ -4,7 +4,12 @@
 
 ## [Unreleased]
 
-#[1.1.4] - 2023-09-25
+# [1.1.5] - 2023-10-09
+
+Added:
+- `Class' attribute to better understand the view hierarchy
+
+# [1.1.4] - 2023-09-25
 
 Fixed:
 - When entering text with an `UiElementIdentifier` with index. Index was not used.
@@ -148,9 +153,10 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.4...HEAD
-[1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.4
-[1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.3
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.5...HEAD
+[1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.5
+[1.1.4]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.4
+[1.1.3]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.3
 [1.1.2]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.2
 [1.1.1]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.1
 [1.1.0]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.0

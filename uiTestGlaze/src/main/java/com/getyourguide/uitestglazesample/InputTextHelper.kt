@@ -49,7 +49,7 @@ internal class InputTextHelper(
             -> {
                 device.findObject(
                     UiSelector().resourceId(foundUiElement.resourceId)
-                        .instance(uiElementIdentifier.index)
+                        .instance(uiElementIdentifier.index),
                 ).text = text
             }
 
@@ -58,7 +58,7 @@ internal class InputTextHelper(
             is UiElementIdentifier.TextRegex,
             -> {
                 device.findObject(
-                    UiSelector().text(foundUiElement.text).instance(uiElementIdentifier.index)
+                    UiSelector().text(foundUiElement.text).instance(uiElementIdentifier.index),
                 ).text = text
             }
         }
