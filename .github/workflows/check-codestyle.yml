@@ -13,7 +13,7 @@ env:
 jobs:
   check-codestyle:
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, small]
 
     steps:
       - uses: actions/checkout@v3
