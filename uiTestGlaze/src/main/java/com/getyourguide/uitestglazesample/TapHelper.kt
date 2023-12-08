@@ -6,7 +6,6 @@ internal class TapHelper(
     private val config: UiTestGlaze.Config,
     private val findUiElementHelper: FindUiElementHelper,
     private val hierarchySettleHelper: HierarchySettleHelper,
-    private val getHierarchyHelper: GetHierarchyHelper,
 ) {
 
     fun tap(
@@ -16,23 +15,47 @@ internal class TapHelper(
         longPress: Boolean,
         offsetX: Int,
         offsetY: Int,
-        hierarchy: TreeNode,
         device: UiDevice,
     ) {
-        val foundUiElement =
-            findUiElementHelper.getUiElement(
-                uiElementIdentifier,
-                hierarchy,
-                optional,
-                device,
-            ) ?: return
-        tapOnTreeNode(foundUiElement, optional, retryCount, longPress, offsetX, offsetY, device)
+        var currentRetry = 0
+        var hierarchy: TreeNode?
+        var hierarchyAfterTap: TreeNode?
+        do {
+            hierarchy =
+                hierarchySettleHelper.waitTillHierarchySettles(
+                    config.loadingResourceIds,
+                    device,
+                    config.waitTillLoadingViewsGoneTimeout,
+                    config.waitTillHierarchySettlesTimeout,
+                )
+
+            val foundUiElement =
+                findUiElementHelper.getUiElement(
+                    uiElementIdentifier,
+                    hierarchy,
+                    optional,
+                    device,
+                ) ?: return
+
+            tapOnTreeNode(foundUiElement, longPress, offsetX, offsetY, device)
+
+            hierarchyAfterTap =
+                hierarchySettleHelper.waitTillHierarchySettles(
+                    emptyList(),
+                    device,
+                    config.waitTillLoadingViewsGoneTimeout,
+                    config.waitTillHierarchySettlesTimeout,
+                )
+            currentRetry++
+        } while (hierarchy == hierarchyAfterTap && currentRetry <= retryCount)
+
+        if (hierarchy == hierarchyAfterTap && !optional) {
+            throw IllegalStateException("Couldn't tap element $uiElementIdentifier")
+        }
     }
 
     private fun tapOnTreeNode(
         uiElement: UiElement,
-        optional: Boolean,
-        retryCount: Int,
         longPress: Boolean,
         offsetX: Int,
         offsetY: Int,
@@ -41,52 +64,16 @@ internal class TapHelper(
         tap(
             uiElement.x + (uiElement.width) / 2 + offsetX,
             uiElement.y + (uiElement.height) / 2 + offsetY,
-            optional,
-            retryCount,
             longPress,
             device,
         )
     }
 
-    fun tap(
-        x: Int,
-        y: Int,
-        optional: Boolean,
-        retryCount: Int,
-        longPress: Boolean,
-        device: UiDevice,
-    ) {
-        var currentTry = 1
-        while (currentTry <= retryCount) {
-            if (tap(x, y, longPress, device)) {
-                return
-            } else {
-                Thread.sleep(200)
-                currentTry++
-            }
-        }
-        if (!optional) {
-            throw IllegalStateException("Couldn't tap element at position: x:$x y:$y")
-        }
-    }
-
-    private fun tap(x: Int, y: Int, longPress: Boolean, device: UiDevice): Boolean {
-        val hierarchyBeforeTap = getHierarchyHelper.getHierarchy(device)
-
+    fun tap(x: Int, y: Int, longPress: Boolean, device: UiDevice) {
         if (longPress) {
             device.swipe(x, y, x, y, 200)
         } else {
             device.click(x, y)
         }
-
-        val hierarchyAfterTap =
-            hierarchySettleHelper.waitTillHierarchySettles(
-                emptyList(),
-                device,
-                config.waitTillLoadingViewsGoneTimeout,
-                config.waitTillHierarchySettlesTimeout,
-            )
-
-        return hierarchyAfterTap != hierarchyBeforeTap
     }
 }

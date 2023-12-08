@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+# [1.1.6] - 2023-12-08
+
+Changed:
+- Input text has now a retry mechanism
+- Tap has now a retry mechanism. It will get a new hierarchy and try to tap again if the tap was not successful.
+
 # [1.1.5] - 2023-10-09
 
 Added:
@@ -153,7 +159,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.5...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.6...HEAD
+[1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.6
 [1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.5
 [1.1.4]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.4
 [1.1.3]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.3

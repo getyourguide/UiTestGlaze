@@ -66,6 +66,7 @@ data class UiTestGlaze(
     }
 
     private val logger = Logger(config.logger)
+    private val printHierarchyHelper = PrintHierarchyHelper(logger)
     private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
     private val getHierarchyHelper = GetHierarchyHelper(logger)
     private val findUiElementHelper = FindUiElementHelper(logger, getHierarchyHelper)
@@ -73,12 +74,11 @@ data class UiTestGlaze(
     private val hierarchySettleHelper =
         HierarchySettleHelper(getHierarchyHelper, findUiElementHelper, logger)
     private val inputTextHelper =
-        InputTextHelper(getHierarchyHelper, findUiElementHelper)
-    private val printHierarchyHelper = PrintHierarchyHelper(logger)
+        InputTextHelper(config, getHierarchyHelper, findUiElementHelper, hierarchySettleHelper, printHierarchyHelper)
     private val scrollHelper =
         ScrollHelper(findUiElementHelper, getHierarchyHelper, hierarchySettleHelper)
     private val tapHelper =
-        TapHelper(config, findUiElementHelper, hierarchySettleHelper, getHierarchyHelper)
+        TapHelper(config, findUiElementHelper, hierarchySettleHelper)
 
     /**
      * Tap on an element and expecting the UI to change.
@@ -96,39 +96,30 @@ data class UiTestGlaze(
         offsetX: Int = 0,
         offsetY: Int = 0,
     ) {
-        val hierarchy =
-            hierarchySettleHelper.waitTillHierarchySettles(
-                config.loadingResourceIds,
-                device,
-                config.waitTillLoadingViewsGoneTimeout,
-                config.waitTillHierarchySettlesTimeout,
-            )
-        tapHelper.tap(uiElementIdentifier, optional, retryCount, longPress, offsetX, offsetY, hierarchy, device)
+        tapHelper.tap(
+            uiElementIdentifier,
+            optional,
+            retryCount,
+            longPress,
+            offsetX,
+            offsetY,
+            device
+        )
     }
 
     /**
-     * Tap on a defined position and expecting the UI to change.
+     * Tap on a defined position.
      *
      * @param xPosition X position to tap.
      * @param yPosition Y position to tap.
-     * @param optional If true, UiTestGlaze will not throw an exception if the element is not found.
-     * @param retryCount Number of times to retry if the Ui does not change after tapping.
      * @param longPress If true, UiTestGlaze will long press on the element.
      */
     fun tap(
         xPosition: Int,
         yPosition: Int,
-        optional: Boolean = false,
-        retryCount: Int = 3,
         longPress: Boolean = false,
     ) {
-        hierarchySettleHelper.waitTillHierarchySettles(
-            config.loadingResourceIds,
-            device,
-            config.waitTillLoadingViewsGoneTimeout,
-            config.waitTillHierarchySettlesTimeout,
-        )
-        tapHelper.tap(xPosition, yPosition, optional, retryCount, longPress, device)
+        tapHelper.tap(xPosition, yPosition, longPress, device)
     }
 
     /**
@@ -215,11 +206,13 @@ data class UiTestGlaze(
      * @param text Text to input.
      * @param uiElementIdentifier Identifier of the element to input text.
      * @param inputShouldBeRecognizedTimeout Timeout to wait till the input is recognized.
+     * @param numberOfRetries Number of times to retry if the input is not recognized.
      */
     fun inputText(
         text: String,
         uiElementIdentifier: UiElementIdentifier,
-        inputShouldBeRecognizedTimeout: Duration = 3.seconds,
+        inputShouldBeRecognizedTimeout: Duration = 5.seconds,
+        numberOfRetries: Int = 3
     ) {
         hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
@@ -232,6 +225,7 @@ data class UiTestGlaze(
             uiElementIdentifier = uiElementIdentifier,
             device = device,
             inputShouldBeRecognizedTimeout = inputShouldBeRecognizedTimeout,
+            numberOfRetries = numberOfRetries
         )
     }
 

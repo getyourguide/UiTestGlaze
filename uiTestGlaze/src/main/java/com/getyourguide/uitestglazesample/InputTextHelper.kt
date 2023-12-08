@@ -5,8 +5,11 @@ import androidx.test.uiautomator.UiSelector
 import kotlin.time.Duration
 
 internal class InputTextHelper(
+    private val config: UiTestGlaze.Config,
     private val getHierarchyHelper: GetHierarchyHelper,
     private val findUiElementHelper: FindUiElementHelper,
+    private val hierarchySettleHelper: HierarchySettleHelper,
+    private val printHierarchyHelper: PrintHierarchyHelper
 ) {
 
     fun inputText(
@@ -14,65 +17,85 @@ internal class InputTextHelper(
         uiElementIdentifier: UiElementIdentifier,
         device: UiDevice,
         inputShouldBeRecognizedTimeout: Duration,
+        numberOfRetries: Int,
     ) {
-        val hierarchy = getHierarchyHelper.getHierarchy(device)
-        val foundUiElement =
-            findUiElementHelper.getUiElement(
-                uiElementIdentifier,
-                hierarchy,
-                false,
-                device,
-            )
-                ?: throw IllegalStateException("Can not find UiElement to enter text")
-
-        when (uiElementIdentifier) {
-            is UiElementIdentifier.PositionInHierarchy ->
-                enterText(
-                    uiElementIdentifier.inputIndicatorText,
-                    foundUiElement.text,
-                    foundUiElement.resourceId,
+        var currentTry = 0
+        while (numberOfRetries >= currentTry) {
+            val hierarchy = getHierarchyHelper.getHierarchy(device)
+            val foundUiElement =
+                findUiElementHelper.getUiElement(
+                    uiElementIdentifier,
+                    hierarchy,
+                    false,
                     device,
-                    text,
                 )
+                    ?: throw IllegalStateException("Can not find UiElement to enter text")
 
-            is UiElementIdentifier.ChildFrom ->
-                enterText(
-                    uiElementIdentifier.inputIndicatorText,
-                    foundUiElement.text,
-                    foundUiElement.resourceId,
+            if (foundUiElement.text == text) {
+                return
+            }
+
+            when (uiElementIdentifier) {
+                is UiElementIdentifier.PositionInHierarchy ->
+                    enterText(
+                        uiElementIdentifier.inputIndicatorText,
+                        foundUiElement.text,
+                        foundUiElement.resourceId,
+                        device,
+                        text,
+                    )
+
+                is UiElementIdentifier.ChildFrom ->
+                    enterText(
+                        uiElementIdentifier.inputIndicatorText,
+                        foundUiElement.text,
+                        foundUiElement.resourceId,
+                        device,
+                        text,
+                    )
+
+                is UiElementIdentifier.Id,
+                is UiElementIdentifier.TestTag,
+                -> {
+                    device.findObject(
+                        UiSelector().resourceId(foundUiElement.resourceId)
+                            .instance(uiElementIdentifier.index),
+                    ).text = text
+                }
+
+                is UiElementIdentifier.Text,
+                is UiElementIdentifier.TextResource,
+                is UiElementIdentifier.TextRegex,
+                -> {
+                    device.findObject(
+                        UiSelector().text(foundUiElement.text).instance(uiElementIdentifier.index),
+                    ).text = text
+                }
+            }
+            val startTime = System.currentTimeMillis()
+            var hierarchyChanged = false
+            do {
+                val hierarchyAfterEnteringText = hierarchySettleHelper.waitTillHierarchySettles(
+                    config.loadingResourceIds,
                     device,
-                    text,
+                    config.waitTillLoadingViewsGoneTimeout,
+                    config.waitTillHierarchySettlesTimeout,
                 )
+                printHierarchyHelper.print(hierarchyAfterEnteringText, "After entering text ")
+                if (hierarchy != hierarchyAfterEnteringText) {
+                    hierarchyChanged = true
+                    break
+                }
+            } while ((System.currentTimeMillis() - startTime) < inputShouldBeRecognizedTimeout.inWholeMilliseconds)
 
-            is UiElementIdentifier.Id,
-            is UiElementIdentifier.TestTag,
-            -> {
-                device.findObject(
-                    UiSelector().resourceId(foundUiElement.resourceId)
-                        .instance(uiElementIdentifier.index),
-                ).text = text
+            if (!hierarchyChanged) {
+                if (currentTry == numberOfRetries) {
+                    throw IllegalStateException("Timeout hit while waiting for text to appear")
+                }
+                currentTry++
+            } else {
+                return
             }
-
-            is UiElementIdentifier.Text,
-            is UiElementIdentifier.TextResource,
-            is UiElementIdentifier.TextRegex,
-            -> {
-                device.findObject(
-                    UiSelector().text(foundUiElement.text).instance(uiElementIdentifier.index),
-                ).text = text
-            }
-        }
-        val startTime = System.currentTimeMillis()
-        var hierarchyChanged = false
-        do {
-            val hierarchyAfterEnteringText = getHierarchyHelper.getHierarchy(device)
-            if (hierarchy != hierarchyAfterEnteringText) {
-                hierarchyChanged = true
-                break
-            }
-        } while ((System.currentTimeMillis() - startTime) < inputShouldBeRecognizedTimeout.inWholeMilliseconds)
-        if (!hierarchyChanged) {
-            throw IllegalStateException("Timeout hit while waiting for hierarchy to settle")
         }
     }
 
