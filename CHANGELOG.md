@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+# [1.1.7] - 2023-12-15
+
+Changed
+- Updated target and compile SDK to 34
+- Updated UiAutomator to 2.3.0-beta01
+- Input text now uses the return value of the UiAutomator to check if the text was entered successfully. `inputShouldBeRecognizedTimeout` is not needed anymore and removed from the `inputText` method.
+
 # [1.1.6] - 2023-12-08
 
 Changed:
@@ -159,7 +166,8 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.6...HEAD
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.7...HEAD
+[1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.7
 [1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.6
 [1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.5
 [1.1.4]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.4

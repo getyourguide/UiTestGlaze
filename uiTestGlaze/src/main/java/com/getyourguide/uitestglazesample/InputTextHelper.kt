@@ -2,30 +2,28 @@ package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
-import kotlin.time.Duration
 
 internal class InputTextHelper(
-    private val config: UiTestGlaze.Config,
     private val getHierarchyHelper: GetHierarchyHelper,
     private val findUiElementHelper: FindUiElementHelper,
-    private val hierarchySettleHelper: HierarchySettleHelper,
-    private val printHierarchyHelper: PrintHierarchyHelper
 ) {
 
     fun inputText(
         text: String,
         uiElementIdentifier: UiElementIdentifier,
         device: UiDevice,
-        inputShouldBeRecognizedTimeout: Duration,
+        hierarchy: TreeNode,
         numberOfRetries: Int,
     ) {
+        var isEnteringTextSuccessfully: Boolean
+        var currentHierarchy = hierarchy
         var currentTry = 0
-        while (numberOfRetries >= currentTry) {
-            val hierarchy = getHierarchyHelper.getHierarchy(device)
+
+        do {
             val foundUiElement =
                 findUiElementHelper.getUiElement(
                     uiElementIdentifier,
-                    hierarchy,
+                    currentHierarchy,
                     false,
                     device,
                 )
@@ -34,8 +32,7 @@ internal class InputTextHelper(
             if (foundUiElement.text == text) {
                 return
             }
-
-            when (uiElementIdentifier) {
+            isEnteringTextSuccessfully = when (uiElementIdentifier) {
                 is UiElementIdentifier.PositionInHierarchy ->
                     enterText(
                         uiElementIdentifier.inputIndicatorText,
@@ -57,45 +54,35 @@ internal class InputTextHelper(
                 is UiElementIdentifier.Id,
                 is UiElementIdentifier.TestTag,
                 -> {
+                    if (foundUiElement.resourceId == null) {
+                        throw IllegalStateException("ResourceId not available to enter text")
+                    }
                     device.findObject(
                         UiSelector().resourceId(foundUiElement.resourceId)
                             .instance(uiElementIdentifier.index),
-                    ).text = text
+                    ).setText(text)
                 }
 
                 is UiElementIdentifier.Text,
                 is UiElementIdentifier.TextResource,
                 is UiElementIdentifier.TextRegex,
                 -> {
+                    if (foundUiElement.text == null) {
+                        throw IllegalStateException("Text not available to enter text")
+                    }
                     device.findObject(
                         UiSelector().text(foundUiElement.text).instance(uiElementIdentifier.index),
-                    ).text = text
+                    ).setText(text)
                 }
             }
-            val startTime = System.currentTimeMillis()
-            var hierarchyChanged = false
-            do {
-                val hierarchyAfterEnteringText = hierarchySettleHelper.waitTillHierarchySettles(
-                    config.loadingResourceIds,
-                    device,
-                    config.waitTillLoadingViewsGoneTimeout,
-                    config.waitTillHierarchySettlesTimeout,
-                )
-                printHierarchyHelper.print(hierarchyAfterEnteringText, "After entering text ")
-                if (hierarchy != hierarchyAfterEnteringText) {
-                    hierarchyChanged = true
-                    break
-                }
-            } while ((System.currentTimeMillis() - startTime) < inputShouldBeRecognizedTimeout.inWholeMilliseconds)
-
-            if (!hierarchyChanged) {
-                if (currentTry == numberOfRetries) {
-                    throw IllegalStateException("Timeout hit while waiting for text to appear")
-                }
+            if (!isEnteringTextSuccessfully) {
+                currentHierarchy = getHierarchyHelper.getHierarchy(device)
                 currentTry++
-            } else {
-                return
             }
+        } while (!isEnteringTextSuccessfully && currentTry < numberOfRetries)
+
+        if (!isEnteringTextSuccessfully) {
+            throw IllegalStateException("Can not enter text")
         }
     }
 
@@ -105,17 +92,17 @@ internal class InputTextHelper(
         uiElementResId: String?,
         device: UiDevice,
         text: String,
-    ) {
-        if (inputIndicatorText) {
+    ): Boolean {
+        return if (inputIndicatorText) {
             if (uiElementText == null) {
                 throw IllegalStateException("Can not find text to enter text")
             }
-            device.findObject(UiSelector().text(uiElementText)).text = text
+            device.findObject(UiSelector().text(uiElementText)).setText(text)
         } else {
             if (uiElementResId == null) {
                 throw IllegalStateException("Can not find resourceId to enter text")
             }
-            device.findObject(UiSelector().resourceId(uiElementResId)).text = text
+            device.findObject(UiSelector().resourceId(uiElementResId)).setText(text)
         }
     }
 }

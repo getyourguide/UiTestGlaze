@@ -65,20 +65,37 @@ data class UiTestGlaze(
         }
     }
 
-    private val logger = Logger(config.logger)
-    private val printHierarchyHelper = PrintHierarchyHelper(logger)
+    private val logger = Logger(logger = config.logger)
+    private val printHierarchyHelper = PrintHierarchyHelper(logger = logger)
     private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-    private val getHierarchyHelper = GetHierarchyHelper(logger)
-    private val findUiElementHelper = FindUiElementHelper(logger, getHierarchyHelper)
-    private val assertionHelper = AssertionHelper(findUiElementHelper)
+    private val getHierarchyHelper = GetHierarchyHelper(logger = logger)
+    private val findUiElementHelper = FindUiElementHelper(
+        logger = logger,
+        getHierarchyHelper = getHierarchyHelper,
+    )
+    private val assertionHelper = AssertionHelper(findUiElementHelper = findUiElementHelper)
     private val hierarchySettleHelper =
-        HierarchySettleHelper(getHierarchyHelper, findUiElementHelper, logger)
-    private val inputTextHelper =
-        InputTextHelper(config, getHierarchyHelper, findUiElementHelper, hierarchySettleHelper, printHierarchyHelper)
+        HierarchySettleHelper(
+            getHierarchyHelper = getHierarchyHelper,
+            findUiElementHelper = findUiElementHelper,
+            logger = logger,
+        )
+    private val inputTextHelper = InputTextHelper(
+        findUiElementHelper = findUiElementHelper,
+        getHierarchyHelper = getHierarchyHelper,
+    )
     private val scrollHelper =
-        ScrollHelper(findUiElementHelper, getHierarchyHelper, hierarchySettleHelper)
+        ScrollHelper(
+            findUiElementHelper = findUiElementHelper,
+            getHierarchyHelper = getHierarchyHelper,
+            hierarchySettleHelper = hierarchySettleHelper,
+        )
     private val tapHelper =
-        TapHelper(config, findUiElementHelper, hierarchySettleHelper)
+        TapHelper(
+            config = config,
+            findUiElementHelper = findUiElementHelper,
+            hierarchySettleHelper = hierarchySettleHelper,
+        )
 
     /**
      * Tap on an element and expecting the UI to change.
@@ -103,7 +120,7 @@ data class UiTestGlaze(
             longPress,
             offsetX,
             offsetY,
-            device
+            device,
         )
     }
 
@@ -205,16 +222,14 @@ data class UiTestGlaze(
      *
      * @param text Text to input.
      * @param uiElementIdentifier Identifier of the element to input text.
-     * @param inputShouldBeRecognizedTimeout Timeout to wait till the input is recognized.
      * @param numberOfRetries Number of times to retry if the input is not recognized.
      */
     fun inputText(
         text: String,
         uiElementIdentifier: UiElementIdentifier,
-        inputShouldBeRecognizedTimeout: Duration = 5.seconds,
-        numberOfRetries: Int = 3
+        numberOfRetries: Int = 3,
     ) {
-        hierarchySettleHelper.waitTillHierarchySettles(
+        val hierarchy = hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
             device,
             config.waitTillLoadingViewsGoneTimeout,
@@ -224,8 +239,8 @@ data class UiTestGlaze(
             text = text,
             uiElementIdentifier = uiElementIdentifier,
             device = device,
-            inputShouldBeRecognizedTimeout = inputShouldBeRecognizedTimeout,
-            numberOfRetries = numberOfRetries
+            hierarchy = hierarchy,
+            numberOfRetries = numberOfRetries,
         )
     }
 
