@@ -222,12 +222,14 @@ data class UiTestGlaze(
      *
      * @param text Text to input.
      * @param uiElementIdentifier Identifier of the element to input text.
-     * @param numberOfRetries Number of times to retry if the input is not recognized.
+     * @param numberOfRetries Number of times to retry if the input is not entered.
+     * @param inputShouldBeRecognizedTimeout Timeout to wait till the input is recognized.
      */
     fun inputText(
         text: String,
         uiElementIdentifier: UiElementIdentifier,
         numberOfRetries: Int = 3,
+        inputShouldBeRecognizedTimeout: Duration = 10.seconds,
     ) {
         val hierarchy = hierarchySettleHelper.waitTillHierarchySettles(
             config.loadingResourceIds,
@@ -241,6 +243,7 @@ data class UiTestGlaze(
             device = device,
             hierarchy = hierarchy,
             numberOfRetries = numberOfRetries,
+            inputShouldBeRecognizedTimeout = inputShouldBeRecognizedTimeout
         )
     }
 

@@ -6,7 +6,7 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'io.github.getyourguide'
-    PUBLISH_VERSION = '1.1.7'
+    PUBLISH_VERSION = '1.1.8'
     PUBLISH_ARTIFACT_ID = 'uitestglaze'
 }
 

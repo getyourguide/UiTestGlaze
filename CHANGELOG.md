@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+# [1.1.8] - 2024-01-09
+
+Changed:
+- Added `inputShouldBeRecognizedTimeout` parameter to `inputText` method to ensure we recognize a hierarchy change after entering a text.
+
 # [1.1.7] - 2023-12-15
 
 Changed
@@ -166,9 +171,10 @@ New:
 
 Initial release.
 
-[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.7...HEAD
-[1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.7
-[1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.6
+[unreleased]: https://github.com/getyourguide/UiTestGlaze/compare/1.1.8...HEAD
+[1.1.8]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.8
+[1.1.7]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.7
+[1.1.6]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.6
 [1.1.5]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.5
 [1.1.4]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.4
 [1.1.3]: https://github.com/getyourguide/UiTestGlaze/releases/tag/1.1.3

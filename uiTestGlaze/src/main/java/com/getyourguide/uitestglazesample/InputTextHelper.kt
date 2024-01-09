@@ -2,6 +2,7 @@ package com.getyourguide.uitestglazesample
 
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import kotlin.time.Duration
 
 internal class InputTextHelper(
     private val getHierarchyHelper: GetHierarchyHelper,
@@ -14,6 +15,7 @@ internal class InputTextHelper(
         device: UiDevice,
         hierarchy: TreeNode,
         numberOfRetries: Int,
+        inputShouldBeRecognizedTimeout: Duration,
     ) {
         var isEnteringTextSuccessfully: Boolean
         var currentHierarchy = hierarchy
@@ -83,6 +85,20 @@ internal class InputTextHelper(
 
         if (!isEnteringTextSuccessfully) {
             throw IllegalStateException("Can not enter text")
+        }
+
+        val startTime = System.currentTimeMillis()
+        var hierarchyChanged = false
+        do {
+            val hierarchyAfterEnteringText = getHierarchyHelper.getHierarchy(device)
+            if (hierarchy != hierarchyAfterEnteringText) {
+                hierarchyChanged = true
+                break
+            }
+        } while ((System.currentTimeMillis() - startTime) < inputShouldBeRecognizedTimeout.inWholeMilliseconds)
+
+        if (!hierarchyChanged) {
+            throw IllegalStateException("Hierarchy did not change after entering text")
         }
     }
 
